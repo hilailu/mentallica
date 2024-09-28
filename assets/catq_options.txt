@@ -1,0 +1,7 @@
+ Strongly Disagree
+ Disagree
+ Somewhat Disagree
+ Neither Agree nor Disagree
+ Somewhat Agree
+ Agree
+ Strongly Agree
