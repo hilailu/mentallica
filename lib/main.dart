@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mentallica/tests/tests_page.dart';
 import 'articles/articles_page.dart';
 import 'contacts/contacts_page.dart';
 import 'firebase_options.dart';
@@ -8,7 +9,6 @@ import 'firebase_options.dart';
 import 'auth/profile_page.dart';
 import 'home_page.dart';
 import 'journal/calendar.dart';
-import 'tests/catqtest.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,62 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const MainPage(),
-      home: const Home(),
+      //home: const Home(),
+      home: AppMainPage(),
+    );
+  }
+}
+
+
+class AppMainPage extends StatefulWidget {
+  @override
+  _AppMainPageState createState() => _AppMainPageState();
+}
+
+class _AppMainPageState extends State<AppMainPage> {
+  int _currentIndex = 0; // Track the current selected tab
+
+  // List of pages for each tab
+  final List<Widget> _pages = [
+    const Home(), // Page 0
+    const CalendarPage(), // Page 1
+    const ContactsPage(), // Page 2
+    const ProfilePage(), // Page 3
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // Display the currently selected page
+      body: _pages[_currentIndex],
+
+      // Bottom Navigation Bar
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex, // Set the currently selected index
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index; // Update the index when an item is clicked
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Doctors',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -99,30 +154,6 @@ class _MainPageState extends State<MainPage> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class TestsPage extends StatelessWidget {
-  const TestsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text('CAT-Q Test'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CATQTestPage()),
-              );
-            },
-          ),
-        ],
       ),
     );
   }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mentallica/articles/articles_page.dart';
+import 'package:mentallica/main.dart';
+import 'package:mentallica/meds/medication_page.dart';
+import 'package:mentallica/tests/tests_page.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'journal/calendar.dart';
@@ -45,8 +49,7 @@ class Home extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (
-                                      context) => const CalendarPage()),
+                                  builder: (context) => const CalendarPage()),
                             );
                           },
                         ),
@@ -55,7 +58,11 @@ class Home extends StatelessWidget {
                           text: 'Meds',
                           color: const Color(0xFFE29E85),
                           onTap: () {
-                            // Navigate to Meds screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MedicationPage()),
+                            );
                           },
                         ),
                         HomeButton(
@@ -63,6 +70,11 @@ class Home extends StatelessWidget {
                           text: 'Tests',
                           color: const Color(0xFF78C0D6),
                           onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const TestsPage()),
+                            );
                             // Navigate to Tests screen
                           },
                         ),
@@ -71,6 +83,11 @@ class Home extends StatelessWidget {
                           text: 'Articles',
                           color: const Color(0xFF746A6A),
                           onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ArticlesPage()),
+                            );
                             // Navigate to Articles screen
                           },
                         ),
@@ -221,7 +238,8 @@ class Home extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment
                                         .center,
                                     children: [
-                                      const Text('Random test', style: TextStyle(
+                                      const Text(
+                                          'Random test', style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white)),
@@ -231,7 +249,8 @@ class Home extends StatelessWidget {
                                         child: Text(
                                             'Take one of our free personality tests',
                                             style: TextStyle(fontSize: 14,
-                                                color: Colors.white.withOpacity(0.8))),)
+                                                color: Colors.white.withOpacity(
+                                                    0.8))),)
                                     ],
                                   ),
                                 ]),),
@@ -256,13 +275,17 @@ class Home extends StatelessWidget {
                                     vertical: 4.0, horizontal: 8.0),
                                 child:
                                 const Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text('All Tests ',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-                                    PhosphorIcon(PhosphorIconsBold.caretRight, size: 10,)
-                              ]),
-                              )],
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center,
+                                    children: [
+                                      Text('All Tests ',
+                                        style: TextStyle(fontSize: 14,
+                                            fontWeight: FontWeight.bold),),
+                                      PhosphorIcon(
+                                        PhosphorIconsBold.caretRight, size: 10,)
+                                    ]),
+                              )
+                            ],
                           ),
                           Container(
                             width: 380,
@@ -320,7 +343,9 @@ class Home extends StatelessWidget {
                                             ]),
                                         Text(
                                             'Based on the Beck Depression Inventory, which measures depression symptoms.',
-                                            style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5))),
+                                            style: TextStyle(fontSize: 13,
+                                                color: Colors.black.withOpacity(
+                                                    0.5))),
                                       ],
                                     ),),
                                 ]),),
@@ -380,151 +405,18 @@ class Home extends StatelessWidget {
                                             ]),
                                         Text(
                                             'Measuring Autism Spectrum Disorders across 10 different scales.',
-                                            style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5))),
+                                            style: TextStyle(fontSize: 13,
+                                                color: Colors.black.withOpacity(
+                                                    0.5))),
                                       ],
                                     ),),
                                 ]),),
                           const SizedBox(height: 20),
-                          const Text(
-                            'Article of the day',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.grey[200],
-                            ),
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Doctor\'s Choice',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                SizedBox(height: 10),
-                                Text('How to cure mental illness'),
-                                Text('3 min read'),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius : BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
-                                bottomLeft: Radius.circular(16),
-                                bottomRight: Radius.circular(16),
-                              ),
-                              color : Color.fromRGBO(255, 255, 255, 1),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-
-                              children: <Widget>[Container(
-                                decoration: const BoxDecoration(
-
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-
-                                  children: <Widget>[Container(
-                                      width: 320,
-                                      height: 160,
-                                      decoration: const BoxDecoration(
-
-                                      ),
-                                      child: Stack(
-                                          children: <Widget>[
-                                            Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                child: Container(
-                                                    width: 320,
-                                                    height: 160,
-                                                    decoration: const BoxDecoration(
-                                                      image : DecorationImage(
-                                                          image: AssetImage('assets/images/Image1.png'),
-                                                          fit: BoxFit.fitWidth
-                                                      ),
-                                                    )
-                                                )
-                                            ),
-                                          ]
-                                      )
-                                  ), const SizedBox(height : 16),
-                                    Container(
-                                      decoration: const BoxDecoration(
-
-                                      ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-
-                                        children: <Widget>[Container(
-                                          decoration: const BoxDecoration(
-
-                                          ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                          child: const Row(
-                                            mainAxisSize: MainAxisSize.min,
-
-                                            children: <Widget>[
-                                              Text('The Dark Side of Hypomania', textAlign: TextAlign.left, style: TextStyle(
-                                                  color: Color.fromRGBO(28, 13, 3, 1),
-                                                  fontFamily: 'Nunito',
-                                                  fontSize: 16,
-                                                  letterSpacing: 0,
-                                                  fontWeight: FontWeight.normal,
-                                                  height: 1.25
-                                              ),), SizedBox(width : 8),
-                                              Text('5 min', textAlign: TextAlign.right, style: TextStyle(
-                                                  color: Color.fromRGBO(28, 13, 3, 1),
-                                                  fontFamily: 'Nunito',
-                                                  fontSize: 12,
-                                                  letterSpacing: 0,
-                                                  fontWeight: FontWeight.normal,
-                                                  height: 1.3333333333333333
-                                              ),),
-
-                                            ],
-                                          ),
-                                        ), const SizedBox(height : 8),
-                                          const Text('Hypomania is a personality style characterized by high energy levels, talkativeness and confidence, ...', textAlign: TextAlign.left, style: TextStyle(
-                                              color: Color.fromRGBO(28, 13, 3, 1),
-                                              fontFamily: 'Nunito',
-                                              fontSize: 12,
-                                              letterSpacing: 0,
-                                              fontWeight: FontWeight.normal,
-                                              height: 1.3333333333333333
-                                          ),),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ],
-                            ),
-                          )
                         ],
                       ))
               ),
             ]
         ),),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'Calendar'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Doctors'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
     );
   }
 }
