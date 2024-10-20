@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentallica/articles/articles_page.dart';
+import 'package:mentallica/journal/journal_entry_page.dart';
 import 'package:mentallica/main.dart';
-import 'package:mentallica/meds/medication_page.dart';
+import 'package:mentallica/meds/medication_list_page.dart';
 import 'package:mentallica/tests/tests_page.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -142,14 +143,24 @@ class Home extends StatelessWidget {
                                               color: const Color(
                                                   0xFFEEC27F), size: 32),
                                           const SizedBox(height: 4),
-                                          const SizedBox(
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                  builder: (context) => JournalEntryPage(date: DateTime.now())));
+                                            },
+                                            child: const SizedBox(
                                               width: 120,
                                               child: Text(
-                                                  'How do I feel today?',
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight
-                                                          .bold)))
+                                                'How do I feel today?',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ],

@@ -6,7 +6,7 @@ class JournalEntry {
   final List<String> symptoms;
   final List<String> positives;
   final String description;
-  final String? audioUrl;
+  final String patientId;
 
   JournalEntry({
     required this.date,
@@ -14,7 +14,7 @@ class JournalEntry {
     required this.symptoms,
     required this.positives,
     required this.description,
-    this.audioUrl,
+    required this.patientId,
   });
 
   factory JournalEntry.fromDocument(DocumentSnapshot doc) {
@@ -24,7 +24,7 @@ class JournalEntry {
       symptoms: List<String>.from(doc['symptoms']),
       positives: List<String>.from(doc['positives']),
       description: doc['description'],
-      audioUrl: doc['audioUrl'],
+      patientId: doc['patientId'],
     );
   }
 }
