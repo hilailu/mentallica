@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
@@ -35,7 +34,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
     String patientId = Auth().userId;
 
     if (patientId == '') {
-      throw 'No logged-in user';
+      return;
     }
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -94,7 +93,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                 return ListView(
                   children: [
                     Text('Mood', style: Theme.of(context).textTheme.titleMedium),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                     Wrap(
                       spacing: 4.0,
                       alignment: WrapAlignment.spaceBetween,
@@ -109,10 +108,10 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                             label: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                SizedBox(height: 6),
+                                const SizedBox(height: 6),
                                 Image.asset('assets/images/$mood.png', height: 36),
-                                Text(mood, style: TextStyle(fontSize: 12),),
-                                SizedBox(height: 6),
+                                Text(mood, style: const TextStyle(fontSize: 12),),
+                                const SizedBox(height: 6),
                               ],
                             ),
                             selected: _selectedMood == mood,
@@ -126,7 +125,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Symptoms', style: Theme.of(context).textTheme.titleMedium),
                     Wrap(
                       spacing: 8.0,
@@ -138,7 +137,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                           selectedColor: const Color(0xFF8BACA5),
                           label: Text(
                             symptom,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                           selected: selected,
                           onSelected: (selected) {
@@ -153,7 +152,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Positive moments', style: Theme.of(context).textTheme.titleMedium),
                     Wrap(
                       spacing: 8.0,
@@ -165,7 +164,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                           selectedColor: const Color(0xFF8BACA5),
                           label: Text(
                             positive,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                           selected: selected,
                           onSelected: (selected) {
@@ -180,9 +179,9 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text('Describe your day', style: Theme.of(context).textTheme.titleMedium),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                     TextField(
                       controller: _descriptionController,
                       maxLines: 10,
@@ -191,18 +190,18 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(foregroundColor: Colors.red),
                           onPressed: () { _removeEntry(date: widget.date); },
-                          child: Text('Delete'),
+                          child: const Text('Delete'),
                         ),
                         ElevatedButton(
                           onPressed: _saveEntry,
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                       ],
                     )

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mentallica/meds/medication_service.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../auth/auth.dart';
 import 'medication_page.dart';
 
 class MedicationPage extends StatefulWidget {
+  const MedicationPage({super.key});
+
   @override
   _MedicationPageState createState() => _MedicationPageState();
 }
@@ -20,15 +21,15 @@ class _MedicationPageState extends State<MedicationPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Medications'),
-          bottom: TabBar(
+          title: const Text('Medications'),
+          bottom: const TabBar(
             tabs: [
               Tab(text: 'Active'),
               Tab(text: 'Completed'),
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             MedicationTab(isCompleted: false), // Active medications
             MedicationTab(isCompleted: true),  // Completed medications
@@ -39,12 +40,10 @@ class _MedicationPageState extends State<MedicationPage> {
   }
 }
 
-
-
 class MedicationTab extends StatefulWidget {
   final bool isCompleted;
 
-  MedicationTab({required this.isCompleted});
+  const MedicationTab({super.key, required this.isCompleted});
 
   @override
   _MedicationTabState createState() => _MedicationTabState();
@@ -72,11 +71,11 @@ class MedicationTab extends StatefulWidget {
           stream: MedicationService().fetchMedications(patientId, widget.isCompleted),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No medications found.'));
+              return const Center(child: Text('No medications found.'));
             }
 
             List<DocumentSnapshot> meds = snapshot.data!.docs;
@@ -122,6 +121,16 @@ class MedicationTab extends StatefulWidget {
                               reminderOffset: med['reminderOffset'],
                               daysTaken: List<String>.from(med['daysTaken']),
                               schedules: List<String>.from(med['schedules']),
+                              wasTaken: (med['wasTaken'] as Map<String, dynamic>).map<String, Map<String, bool>>(
+                                    (key, value) {
+                                  return MapEntry(
+                                    key,
+                                    (value as Map<String, dynamic>).map<String, bool>(
+                                          (innerKey, innerValue) => MapEntry(innerKey, innerValue as bool),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                       ),
                     ).then((_) {
@@ -146,8 +155,8 @@ class MedicationTab extends StatefulWidget {
               });
             });
           },
-          child: Icon(Icons.add),
           tooltip: 'Add Medication',
+          child: const Icon(Icons.add),
         ),
       );
     }
@@ -162,7 +171,7 @@ class MedicationCard extends StatelessWidget {
   final int totalDays;
   final VoidCallback onTap;
 
-  MedicationCard({
+  const MedicationCard({super.key, 
     required this.name,
     required this.startDate,
     required this.endDate,
@@ -187,28 +196,28 @@ class MedicationCard extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 '$startDate - $endDate',
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               // Progress bar to show medication course progress
               LinearProgressIndicator(
                 value: progressDays / totalDays, // Shows progress as a fraction
                 minHeight: 6,
                 backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 '$progressDays out of $totalDays days completed',
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey),
               ),
             ],
           ),

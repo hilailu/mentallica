@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'medication_service.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+
+import 'medication_taken_page.dart';
 
 class MedicationForm extends StatefulWidget {
   final String id;
@@ -19,8 +18,9 @@ class MedicationForm extends StatefulWidget {
   final int reminderOffset;
   final List<String> daysTaken;
   final List<String> schedules;
+  final Map<String, Map<String, bool>> wasTaken;
 
-  MedicationForm({
+  const MedicationForm({super.key, 
     required this.id,
     required this.name,
     required this.dose,
@@ -32,24 +32,27 @@ class MedicationForm extends StatefulWidget {
     required this.reminderOffset,
     required this.daysTaken,
     required this.schedules,
+    required this.wasTaken,
   });
 
-  MedicationForm.empty()
+  MedicationForm.empty({super.key})
       : id = '',
         name = 'New Medication',
         dose = '0.5',
         type = 'Pill',
         measurement = 'mg',
         startDate = DateTime.now(),
-        endDate = DateTime.now().add(Duration(days: 14)),
+        endDate = DateTime.now().add(const Duration(days: 14)),
         timeRelation = 'before meals',
         reminderOffset = 5,
         daysTaken = ['Tue','Thu','Sat'],
-        schedules = ['12:00'];
+        schedules = ['12:00'],
+        wasTaken = {};
 
   @override
   _MedicationFormState createState() => _MedicationFormState();
 }
+
 
 class _MedicationFormState extends State<MedicationForm> {
   late String _name = 'New Medication';
@@ -57,12 +60,13 @@ class _MedicationFormState extends State<MedicationForm> {
   late String _dose = '0.5';
   late String _measurement = 'mg';
   late DateTime _startDate = DateTime.now();
-  late DateTime _endDate = DateTime.now().add(Duration(days: 14));
+  late DateTime _endDate = DateTime.now().add(const Duration(days: 14));
   late String _timeRelation = 'before meals';
   late List<String> _schedules = ['12:00'];
   late int _reminderOffset = 5;
   late List<String> _daysTaken = ['Tue','Thu','Sat'];
   late String _medicationId;
+  late Map<String, Map<String, bool>> _wasTaken;
 
   final List<MedicationType> medicationTypes = [
     MedicationType(name: 'Pill', icon: PhosphorIcons.pill()),
@@ -80,7 +84,7 @@ class _MedicationFormState extends State<MedicationForm> {
     'with food',
     'nevermind'
   ];
-  final List<String> days = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun'];
+  final List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   @override
   void initState() {
@@ -96,12 +100,34 @@ class _MedicationFormState extends State<MedicationForm> {
     _schedules = widget.schedules;
     _daysTaken = widget.daysTaken;
     _reminderOffset = widget.reminderOffset;
+    _wasTaken = widget.wasTaken;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Medication')),
+        appBar: AppBar(
+            title: const Text('Medication'),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.schedule),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MedicationTrackingPage(
+                        medicationId: _medicationId,
+                        name: _name,
+                        schedules: List<String>.from(_schedules),
+                        daysTaken: _daysTaken,
+                        wasTaken: _wasTaken,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ]
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: LayoutBuilder(
@@ -111,7 +137,7 @@ class _MedicationFormState extends State<MedicationForm> {
 
                 return ListView(
                   children: [
-                    Text('Name'),
+                    const Text('Name'),
                     TextFormField(
                       initialValue: _name,
                       keyboardType: TextInputType.text,
@@ -121,9 +147,9 @@ class _MedicationFormState extends State<MedicationForm> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
-                    Text('Type'),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 20),
+                    const Text('Type'),
+                    const SizedBox(height: 6),
                     Wrap(
                       spacing: 4.0,
                       alignment: WrapAlignment.spaceBetween,
@@ -137,7 +163,7 @@ class _MedicationFormState extends State<MedicationForm> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(medication.icon, size: 24),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                               ],
                             ),
                             selected: _medicationType == medication.name,
@@ -151,8 +177,8 @@ class _MedicationFormState extends State<MedicationForm> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
-                    Text('Single dose'),
+                    const SizedBox(height: 20),
+                    const Text('Single dose'),
                     Row(
                       children: [
                         Expanded(
@@ -166,7 +192,7 @@ class _MedicationFormState extends State<MedicationForm> {
                             },
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         DropdownButton<String>(
                           value: _measurement,
                           onChanged: (newValue) {
@@ -183,9 +209,9 @@ class _MedicationFormState extends State<MedicationForm> {
                         )
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                    Text('When to take it'),
+                    const Text('When to take it'),
                     Wrap(
                       alignment: WrapAlignment.spaceBetween,
                       spacing: 4.0,
@@ -199,7 +225,7 @@ class _MedicationFormState extends State<MedicationForm> {
                             label: Center(
                               child: Text(
                                 time,
-                                style: TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 12),
                               ),
                             ),
                             selected: _timeRelation == time,
@@ -212,10 +238,10 @@ class _MedicationFormState extends State<MedicationForm> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Schedule selection
-                    Text('Schedule'),
+                    const Text('Schedule'),
                     Column(
                       children: _schedules
                           .asMap()
@@ -248,19 +274,19 @@ class _MedicationFormState extends State<MedicationForm> {
                               '12:00');
                         });
                       },
-                      child: Text('+ Add Dose'),
+                      child: const Text('+ Add Dose'),
                     ),
-                    SizedBox(height: 20),
-                    Text('Reminder'),
+                    const SizedBox(height: 20),
+                    const Text('Reminder'),
                     ListTile(
-                      title: Text('Reminder time'),
+                      title: const Text('Reminder time'),
                       trailing: Text('in $_reminderOffset min'),
                       onTap: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Set Reminder Time'),
+                              title: const Text('Set Reminder Time'),
                               content: TextFormField(
                                 initialValue: _reminderOffset.toString(),
                                 keyboardType: TextInputType.number,
@@ -272,7 +298,7 @@ class _MedicationFormState extends State<MedicationForm> {
                               ),
                               actions: [
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -283,8 +309,8 @@ class _MedicationFormState extends State<MedicationForm> {
                         );
                       },
                     ),
-                    SizedBox(height: 20),
-                    Text('Course duration'),
+                    const SizedBox(height: 20),
+                    const Text('Course duration'),
                     Wrap(
                       spacing: 8.0,
                       children: days.map((day) {
@@ -298,7 +324,7 @@ class _MedicationFormState extends State<MedicationForm> {
                             label: Center(
                               child: Text(
                                 day,
-                                style: TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 12),
                               ),
                             ),
                             selected: selected,
@@ -315,9 +341,9 @@ class _MedicationFormState extends State<MedicationForm> {
                         );
                       }).toList(),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ListTile(
-                      title: Text('Start'),
+                      title: const Text('Start'),
                       trailing: Text(
                           DateFormat('yyyy-MM-dd').format(_startDate)),
                       onTap: () async {
@@ -335,7 +361,7 @@ class _MedicationFormState extends State<MedicationForm> {
                       },
                     ),
                     ListTile(
-                      title: Text('End'),
+                      title: const Text('End'),
                       trailing: Text(DateFormat('yyyy-MM-dd').format(_endDate)),
                       onTap: () async {
                         DateTime? selectedDate = await showDatePicker(
@@ -351,7 +377,7 @@ class _MedicationFormState extends State<MedicationForm> {
                         }
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -361,7 +387,7 @@ class _MedicationFormState extends State<MedicationForm> {
                             MedicationService().deleteMedication(id: _medicationId);
                             Navigator.pop(context);
                           },
-                          child: Text('Delete'),
+                          child: const Text('Delete'),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -377,13 +403,14 @@ class _MedicationFormState extends State<MedicationForm> {
                               daysTaken: _daysTaken,
                               startDate: _startDate,
                               endDate: _endDate,
+                              wasTaken: _wasTaken,
                             );
                             Navigator.pop(context);
                           },
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 );
               }),

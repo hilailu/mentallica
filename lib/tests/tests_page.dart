@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'autism/aqtest.dart';
@@ -10,7 +9,7 @@ class TestCategory extends StatefulWidget {
   final String category;
   final List<Map<String, dynamic>> tests;
 
-  TestCategory({required this.category, required this.tests});
+  const TestCategory({super.key, required this.category, required this.tests});
 
   @override
   _TestCategoryState createState() => _TestCategoryState();
@@ -52,25 +51,25 @@ class TestsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Mental Health Tests')),
       body: ListView(
-        children: [
+        children: const [
           TestCategory(
             category: 'Autism',
             tests: [
-              {'name': 'CAT-Q Test', 'page': const CATQTestPage()},
-              {'name': 'RBQ-2A Test', 'page': const RBQ2ATestPage()},
-              {'name': 'AQ Test', 'page': const AQTestPage()},
+              {'name': 'CAT-Q Test', 'page': CATQTestPage()},
+              {'name': 'RBQ-2A Test', 'page': RBQ2ATestPage()},
+              {'name': 'AQ Test', 'page': AQTestPage()},
             ],
           ),
           TestCategory(
             category: 'Depression',
             tests: [
-              {'name': 'PHQ-9 Test', 'page': const CATQTestPage()},
+              {'name': 'PHQ-9 Test', 'page': CATQTestPage()},
             ],
           ),
           TestCategory(
             category: 'Anxiety',
             tests: [
-              {'name': 'GAD-7 Test', 'page': const CATQTestPage()},
+              {'name': 'GAD-7 Test', 'page': CATQTestPage()},
             ],
           ),
         ],

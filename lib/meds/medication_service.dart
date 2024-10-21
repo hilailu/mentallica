@@ -5,9 +5,8 @@ import '../auth/auth.dart';
 class MedicationService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Save medication for current user
   Future<void> saveMedication({
-    String? medicationId, // Optional ID for updating an existing medication
+    String? medicationId,
     required String name,
     required String dose,
     required String measurement,
@@ -18,17 +17,13 @@ class MedicationService {
     required List<String> daysTaken,
     required DateTime startDate,
     required DateTime endDate,
+    required Map<String, Map<String, bool>> wasTaken,
   }) async {
     try {
-      // Get current user ID from Auth class
       String? patientId = Auth().userId;
 
-      if (patientId == null) {
-        throw 'No logged-in user';
-      }
-
       Map<String, dynamic> medicationData = {
-        'patientId': patientId, // Save current user's ID
+        'patientId': patientId,
         'name': name,
         'dose': dose,
         'measurement': measurement,
@@ -39,13 +34,12 @@ class MedicationService {
         'daysTaken': daysTaken,
         'startDate': Timestamp.fromDate(startDate),
         'endDate': Timestamp.fromDate(endDate),
+        'wasTaken': wasTaken,
       };
 
       if (medicationId != '') {
-        // If medicationId is provided, update the existing document
         await _db.collection('medications').doc(medicationId).update(medicationData);
       } else {
-        // If no medicationId, add a new document
         await _db.collection('medications').add(medicationData);
       }
     } catch (e) {
@@ -61,6 +55,20 @@ class MedicationService {
     }
   }
 
+  Future<void> updateMedicationTracking({
+    required String medicationId,
+    required Map<String, Map<String, bool>> wasTaken,
+  }) async {
+    try {
+      await _db.collection('medications').doc(medicationId).update({
+        'wasTaken': wasTaken,
+      });
+    } catch (e) {
+      print('Error updating medication tracking: $e');
+      rethrow;
+    }
+  }
+
   Stream<QuerySnapshot> fetchMedications(String patientId, bool isCompleted) {
     DateTime now = DateTime.now();
 
@@ -68,12 +76,10 @@ class MedicationService {
         .where('patientId', isEqualTo: patientId);
 
     if (isCompleted) {
-      // Fetch completed medications (endDate <= now)
       return medications
           .where('endDate', isLessThanOrEqualTo: now)
           .snapshots();
     } else {
-      // Fetch ongoing medications (startDate <= now and endDate > now)
       return medications
           .where('startDate', isLessThanOrEqualTo: now)
           .where('endDate', isGreaterThanOrEqualTo: now)

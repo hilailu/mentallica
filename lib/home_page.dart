@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentallica/articles/articles_page.dart';
 import 'package:mentallica/journal/journal_entry_page.dart';
-import 'package:mentallica/main.dart';
 import 'package:mentallica/meds/medication_list_page.dart';
 import 'package:mentallica/tests/tests_page.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -62,7 +61,7 @@ class Home extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MedicationPage()),
+                                  builder: (context) => const MedicationPage()),
                             );
                           },
                         ),

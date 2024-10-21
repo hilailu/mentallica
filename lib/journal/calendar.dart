@@ -67,7 +67,7 @@ class _CalendarPageState extends State<CalendarPage> {
             onDaySelected: (selectedDay, focusedDay) {
               if (selectedDay.isAfter(DateTime.now())) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Cannot create a note for future days!')),
+                  const SnackBar(content: Text('Cannot create a note for future days!')),
                 );
               } else {
                 setState(() {

@@ -35,13 +35,15 @@ class MyApp extends StatelessWidget {
       ),
       //home: const MainPage(),
       //home: const Home(),
-      home: AppMainPage(),
+      home: const AppMainPage(),
     );
   }
 }
 
 
 class AppMainPage extends StatefulWidget {
+  const AppMainPage({super.key});
+
   @override
   _AppMainPageState createState() => _AppMainPageState();
 }
@@ -73,22 +75,22 @@ class _AppMainPageState extends State<AppMainPage> {
         },
         items: const [
           BottomNavigationBarItem(
-            backgroundColor: const Color(0xFF8BACA5),
+            backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            backgroundColor: const Color(0xFF8BACA5),
+            backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.calendar_today),
             label: 'Calendar',
           ),
           BottomNavigationBarItem(
-            backgroundColor: const Color(0xFF8BACA5),
+            backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.map),
             label: 'Doctors',
           ),
           BottomNavigationBarItem(
-            backgroundColor: const Color(0xFF8BACA5),
+            backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.person_outline),
             label: 'Profile',
           ),
