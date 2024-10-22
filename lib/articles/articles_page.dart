@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'add_article_page.dart';
 import 'article.dart';
 import 'article_tile.dart';
 
 class ArticlesPage extends StatefulWidget {
-  const ArticlesPage({super.key});
+  final bool isDoctor;
+
+  const ArticlesPage({super.key,
+    required this.isDoctor,
+  });
 
   @override
   _ArticlesPageState createState() => _ArticlesPageState();
@@ -98,6 +103,19 @@ class _ArticlesPageState extends State<ArticlesPage> {
           return ArticleTile(article: _filteredArticles[index]);
         },
       ),
+      floatingActionButton: widget.isDoctor
+          ? FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddArticlePage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      )
+          : null,  // FAB is only shown if isDoctor is true
     );
   }
 }

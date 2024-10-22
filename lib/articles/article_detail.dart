@@ -14,28 +14,28 @@ class ArticleDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(article.title),
       ),
-      body: Padding(
+      body: SingleChildScrollView(  // Added SingleChildScrollView to make the content scrollable
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               DateFormat.yMMMMd().format(article.date.toDate()),
-              style: Theme.of(context).textTheme.bodySmall,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               children: article.tags
                   .map((tag) => Chip(
-                label: Text(tag),
+                label: Text(tag, style: TextStyle(fontSize: 16),),
               ))
                   .toList(),
             ),
             const SizedBox(height: 16),
             Text(
               article.content,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
         ),

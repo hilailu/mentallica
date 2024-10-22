@@ -1,17 +1,142 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import '../auth/auth.dart';
 import 'contact.dart';
 
-class ContactDetailsPage extends StatelessWidget {
+class ContactDetailsPage extends StatefulWidget {
   final Contact contact;
 
   const ContactDetailsPage({required this.contact, super.key});
 
   @override
+  _ContactDetailsPageState createState() => _ContactDetailsPageState();
+}
+
+class _ContactDetailsPageState extends State<ContactDetailsPage> {
+  List<String> _availableSlots = [];
+  List<String> _bookedSlots = [];
+  DateTime _selectedDate = DateTime.now();
+  String? _selectedSlot;
+  bool _loadingSlots = false;
+  String? _doctorId;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDoctorIdAndSchedule();
+  }
+
+  Future<void> _fetchDoctorIdAndSchedule() async {
+    setState(() {
+      _loadingSlots = true;
+    });
+
+    QuerySnapshot scheduleQuery = await FirebaseFirestore.instance
+        .collection('schedules')
+        .where('contactId', isEqualTo: widget.contact.id)
+        .get();
+
+    if (scheduleQuery.docs.isNotEmpty) {
+      DocumentSnapshot scheduleDoc = scheduleQuery.docs.first;
+      Map<String, dynamic> scheduleData = scheduleDoc.data() as Map<
+          String,
+          dynamic>;
+
+      _doctorId = scheduleData['doctorId'];
+      List<String> workingDays = List<String>.from(scheduleData['workingDays']);
+      List<String> schedules = List<String>.from(scheduleData['schedules']);
+      List<String> lunchBreak = List<String>.from(scheduleData['lunchBreak']);
+
+      String selectedDay = DateFormat('EEE').format(_selectedDate);
+      if (workingDays.contains(selectedDay)) {
+        _availableSlots = _generateTimeSlots(schedules, lunchBreak);
+        await _fetchBookedSlots();
+      } else {
+        _availableSlots = [];
+      }
+    }
+
+    setState(() {
+      _loadingSlots = false;
+    });
+  }
+
+  Future<void> _fetchBookedSlots() async {
+    if (_doctorId == null) return;
+
+    QuerySnapshot appointmentQuery = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('doctorId', isEqualTo: _doctorId)
+        .where('date', isEqualTo: _selectedDate)
+        .get();
+
+    _bookedSlots = appointmentQuery.docs
+        .map((doc) =>
+    (doc.data() as Map<String,
+        dynamic>)['timeSlot'] as String)
+        .toList();
+  }
+
+  List<String> _generateTimeSlots(List<String> schedules,
+      List<String> lunchBreak) {
+    List<String> slots = [];
+    TimeOfDay start = _parseTime(schedules[0]);
+    TimeOfDay end = _parseTime(schedules[1]);
+    TimeOfDay lunchStart = _parseTime(lunchBreak[0]);
+    TimeOfDay lunchEnd = _parseTime(lunchBreak[1]);
+
+    while (start.hour < end.hour ||
+        (start.hour == end.hour && start.minute < end.minute)) {
+      if ((start.hour < lunchStart.hour || (start.hour == lunchStart.hour &&
+          start.minute < lunchStart.minute)) ||
+          (start.hour >= lunchEnd.hour && start.minute >= lunchEnd.minute)) {
+        slots.add(start.format(context));
+      }
+
+      start = TimeOfDay(hour: start.hour + 1, minute: start.minute);
+    }
+
+    return slots;
+  }
+
+  TimeOfDay _parseTime(String time) {
+    final format = DateFormat('h:mm a');
+    DateTime dateTime = format.parse(time);
+    return TimeOfDay.fromDateTime(dateTime);
+  }
+
+  Future<void> _bookAppointment() async {
+    if (_selectedSlot == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please select a time slot")));
+      return;
+    }
+
+    if (_doctorId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Doctor information not available")));
+      return;
+    }
+
+    await FirebaseFirestore.instance.collection('appointments').add({
+      'doctorId': _doctorId,
+      'patientId': Auth().userId,
+      'date': _selectedDate,
+      'timeSlot': _selectedSlot,
+      'contactId': widget.contact.id,
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Appointment booked successfully")));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(contact.name),
+        title: Text(widget.contact.name),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -19,33 +144,110 @@ class ContactDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              contact.name,
-              style: Theme.of(context).textTheme.headlineSmall,
+              widget.contact.name,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineSmall,
             ),
             const SizedBox(height: 8),
             Text(
-              contact.address,
-              style: Theme.of(context).textTheme.bodyMedium,
+              widget.contact.address,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyMedium,
             ),
             const SizedBox(height: 16),
             Expanded(
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(contact.location.latitude, contact.location.longitude),
+                  target: LatLng(widget.contact.location.latitude,
+                      widget.contact.location.longitude),
                   zoom: 15.0,
                 ),
                 markers: {
                   Marker(
-                    markerId: MarkerId(contact.name),
-                    position: LatLng(contact.location.latitude, contact.location.longitude),
+                    markerId: MarkerId(widget.contact.name),
+                    position: LatLng(widget.contact.location.latitude,
+                        widget.contact.location.longitude),
                     infoWindow: InfoWindow(
-                      title: contact.name,
-                      snippet: contact.address,
+                      title: widget.contact.name,
+                      snippet: widget.contact.address,
                     ),
                   ),
                 },
               ),
             ),
+            const SizedBox(height: 20),
+            Text('Select date', style: Theme
+                .of(context)
+                .textTheme
+                .bodyLarge),
+            const SizedBox(height: 8),
+            SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: _selectedDate,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(const Duration(days: 30)),
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        _selectedDate = picked;
+                        _fetchDoctorIdAndSchedule();
+                      });
+                    }
+                  },
+                  child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
+                )),
+            const SizedBox(height: 16),
+            Text('Available time slots', style: Theme
+                .of(context)
+                .textTheme
+                .bodyLarge),
+            const SizedBox(height: 8),
+            _loadingSlots
+                ? CircularProgressIndicator()
+                : Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: _availableSlots.map((slot) {
+                bool isBooked = _bookedSlots.contains(slot);
+                return ChoiceChip(
+                  showCheckmark: false,
+                  label: Text(
+                    slot,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  selected: _selectedSlot == slot,
+                  onSelected: isBooked
+                      ? null
+                      : (selected) {
+                    setState(() {
+                      _selectedSlot = selected ? slot : null;
+                    });
+                  },
+                  selectedColor: const Color(0xFF8BACA5),
+                  disabledColor: const Color(0xFFc8cfcd),
+                  labelStyle: TextStyle(
+                    color: isBooked ? Colors.grey : Colors.black,
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _selectedSlot == null ? null : _bookAppointment,
+                  child: Text('Book Appointment'),
+                )),
           ],
         ),
       ),

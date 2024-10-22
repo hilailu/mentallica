@@ -46,7 +46,7 @@ class MedicationForm extends StatefulWidget {
         timeRelation = 'before meals',
         reminderOffset = 5,
         daysTaken = ['Tue','Thu','Sat'],
-        schedules = ['12:00'],
+        schedules = ['9:00 AM'],
         wasTaken = {};
 
   @override
@@ -62,7 +62,7 @@ class _MedicationFormState extends State<MedicationForm> {
   late DateTime _startDate = DateTime.now();
   late DateTime _endDate = DateTime.now().add(const Duration(days: 14));
   late String _timeRelation = 'before meals';
-  late List<String> _schedules = ['12:00'];
+  late List<String> _schedules = ['9:00 AM'];
   late int _reminderOffset = 5;
   late List<String> _daysTaken = ['Tue','Thu','Sat'];
   late String _medicationId;
@@ -271,7 +271,7 @@ class _MedicationFormState extends State<MedicationForm> {
                       onPressed: () {
                         setState(() {
                           _schedules.add(
-                              '12:00');
+                              '9:00 AM');
                         });
                       },
                       child: const Text('+ Add Dose'),

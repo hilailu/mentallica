@@ -53,7 +53,7 @@ class _AppMainPageState extends State<AppMainPage> {
 
   // List of pages for each tab
   final List<Widget> _pages = [
-    const Home(), // Page 0
+    HomePage(), // Page 0
     const CalendarPage(), // Page 1
     const ContactsPage(), // Page 2
     const ProfilePage(), // Page 3
@@ -99,7 +99,7 @@ class _AppMainPageState extends State<AppMainPage> {
     );
   }
 }
-
+/*
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -163,4 +163,4 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-}
+}*/

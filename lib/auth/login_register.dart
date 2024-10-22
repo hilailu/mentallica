@@ -189,12 +189,13 @@ class _LoginPageState extends State<LoginPage> {
           .createUserWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text)
           .then((value) => {postDetailsToFirestore()})
           .catchError((e) { errorMessage = e;});
+    route();
   }
 
   void postDetailsToFirestore() async {
     var user = Auth().currentUser;
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref.doc(user!.uid).set({'email': _controllerEmail.text, 'role': role});
+    ref.doc(user!.uid).set({'email': _controllerEmail.text, 'role': role, 'name': 'User'});
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => HomePage()));
   }
