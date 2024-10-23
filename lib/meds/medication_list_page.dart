@@ -31,8 +31,8 @@ class _MedicationPageState extends State<MedicationPage> {
         ),
         body: const TabBarView(
           children: [
-            MedicationTab(isCompleted: false), // Active medications
-            MedicationTab(isCompleted: true),  // Completed medications
+            MedicationTab(isCompleted: false),
+            MedicationTab(isCompleted: true),
           ],
         ),
       ),

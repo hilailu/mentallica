@@ -11,9 +11,9 @@ class NextPillWidget extends StatefulWidget {
 
 class _NextPillWidgetState extends State<NextPillWidget> {
   String _medicationId = '';
-  String nextDoseInfo = '';
-  String nextDoseTime = '';
-  String nextDoseDetails = '';
+  String nextDoseInfo = 'Today';
+  String nextDoseTime = '12:00';
+  String nextDoseDetails = 'Ibuprofen, 2 pills';
 
   @override
   void initState() {

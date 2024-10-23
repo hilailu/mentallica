@@ -5,6 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mentallica/articles/articles_page.dart';
 import 'package:mentallica/journal/journal_entry_page.dart';
 import 'package:mentallica/meds/medication_list_page.dart';
+import 'package:mentallica/meds/wiki/medications_info_list.dart';
+import 'package:mentallica/schedule/appointment_list.dart';
+import 'package:mentallica/schedule/appointment_widget.dart';
 import 'package:mentallica/schedule/schedule_page.dart';
 import 'package:mentallica/statistics/statistics_page.dart';
 import 'package:mentallica/tests/autism/aqtest.dart';
@@ -527,7 +530,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const CalendarPage()),
+                                  builder: (context) => const AppointmentsPage()),
                             );
                           },
                         ),
@@ -564,7 +567,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const MedicationPage()),
+                                  builder: (context) => MedicationsInfoPage()),
                             );
                           },
                         ),
@@ -634,54 +637,7 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  width: 180,
-                                  height: 120,
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFE29E85)
-                                              .withOpacity(0.2),
-                                          borderRadius: const BorderRadius
-                                              .all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0, horizontal: 8.0),
-                                        child: const Text('Today',
-                                          style: TextStyle(fontSize: 14,
-                                              color: Color(0xFFE29E85)),),
-                                      ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .center,
-                                        children: [
-                                          const Text(
-                                            '12:00', style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),),
-                                          const SizedBox(width: 5),
-                                          PhosphorIcon(
-                                              PhosphorIcons.clock(),
-                                              size: 20)
-                                        ],
-                                      ),
-                                      const Text('Semen Petrov',
-                                          style: TextStyle(fontSize: 14,)),
-                                    ],
-                                  ),
-                                ),
+                                const NextAppointmentWidget(),
                               ]
                           ),
                           const SizedBox(height: 20),

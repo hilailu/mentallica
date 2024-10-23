@@ -14,7 +14,7 @@ class ArticleDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(article.title),
       ),
-      body: SingleChildScrollView(  // Added SingleChildScrollView to make the content scrollable
+      body: SingleChildScrollView( 
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
