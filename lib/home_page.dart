@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentallica/articles/articles_page.dart';
@@ -5,6 +7,10 @@ import 'package:mentallica/journal/journal_entry_page.dart';
 import 'package:mentallica/meds/medication_list_page.dart';
 import 'package:mentallica/schedule/schedule_page.dart';
 import 'package:mentallica/statistics/statistics_page.dart';
+import 'package:mentallica/tests/autism/aqtest.dart';
+import 'package:mentallica/tests/autism/catqtest.dart';
+import 'package:mentallica/tests/autism/rbq2atest.dart';
+import 'package:mentallica/tests/depression/phq9.dart';
 import 'package:mentallica/tests/tests_page.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -21,6 +27,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? role = 'Patient';
   String? name = 'User';
+
+  final List<Widget> testPages = [
+    CATQTestPage(),
+    RBQ2ATestPage(),
+    AQTestPage(),
+  ];
 
   @override
   void initState() {
@@ -223,54 +235,67 @@ class _HomePageState extends State<HomePage> {
                               ]
                           ),
                           const SizedBox(height: 10),
-                          Container(
-                            width: 380,
-                            height: 120,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: const Color(0xFF8BACA5),
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                      Container(
+                        width: 380,
+                        height: 120,
+                        margin: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: const Color(0xFF8BACA5),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            final randomIndex = Random().nextInt(testPages.length);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => testPages[randomIndex]),
+                            );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: SizedBox.fromSize(
+                                  size: const Size.fromRadius(44),
+                                  child: Image.asset(
+                                    'assets/images/random_test.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    // Image border
-                                    child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(44),
-                                      // Image radius
-                                      child: Image.asset(
-                                          'assets/images/random_test.png',
-                                          fit: BoxFit.cover),
+                                  const Text(
+                                    'Random test',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                  const SizedBox(width: 16,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .center,
-                                    children: [
-                                      const Text(
-                                          'Random test', style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white)),
-                                      SizedBox(
-                                        width: 160,
-                                        height: 40,
-                                        child: Text(
-                                            'Take one of our free personality tests',
-                                            style: TextStyle(fontSize: 14,
-                                                color: Colors.white.withOpacity(
-                                                    0.8))),)
-                                    ],
+                                  SizedBox(
+                                    width: 160,
+                                    height: 40,
+                                    child: Text(
+                                      'Take one of our free personality tests',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white.withOpacity(0.8),
+                                      ),
+                                    ),
                                   ),
-                                ]),),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                           const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -312,130 +337,150 @@ class _HomePageState extends State<HomePage> {
                               ),)
                             ],
                           ),
-                          Container(
-                            width: 380,
-                            height: 96,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PHQ9TestPage()),
+                              );
+                            },
+                            child: Container(
+                              width: 380,
+                              height: 96,
+                              margin: const EdgeInsets.only(top: 10),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
-                                    // Image border
                                     child: SizedBox.fromSize(
                                       size: const Size.fromRadius(32),
-                                      // Image radius
                                       child: Image.asset(
-                                          'assets/images/depression.png',
-                                          fit: BoxFit.cover),
+                                        'assets/images/depression.png',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 16,),
+                                  const SizedBox(width: 16),
                                   SizedBox(
                                     width: 254,
                                     height: 100,
-                                    child:
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center,
-                                            children: [
-                                              const Text('Depression Test',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                              Text('3 min',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(
-                                                          0.5))),
-                                            ]),
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Depression Test',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              '1 min',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black.withOpacity(0.5),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         Text(
-                                            'Based on the Beck Depression Inventory, which measures depression symptoms.',
-                                            style: TextStyle(fontSize: 13,
-                                                color: Colors.black.withOpacity(
-                                                    0.5))),
+                                          'Based on the Beck Depression Inventory, which measures depression symptoms.',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black.withOpacity(0.5),
+                                          ),
+                                        ),
                                       ],
-                                    ),),
-                                ]),),
-                          Container(
-                            width: 380,
-                            height: 96,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => CATQTestPage()),
+                              );
+                            },
+                            child: Container(
+                              width: 380,
+                              height: 96,
+                              margin: const EdgeInsets.only(top: 10),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
-                                    // Image border
                                     child: SizedBox.fromSize(
                                       size: const Size.fromRadius(32),
-                                      // Image radius
                                       child: Image.asset(
-                                          'assets/images/autism.png',
-                                          fit: BoxFit.cover),
+                                        'assets/images/autism.png',
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 16,),
+                                  const SizedBox(width: 16),
                                   SizedBox(
                                     width: 254,
                                     height: 100,
-                                    child:
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center,
-                                            children: [
-                                              const Text('Autism Spectrum Test',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                              Text('5 min',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(
-                                                          0.5))),
-                                            ]),
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Autism Spectrum Test',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              '3 min',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black.withOpacity(0.5),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         Text(
-                                            'Measuring Autism Spectrum Disorders across 10 different scales.',
-                                            style: TextStyle(fontSize: 13,
-                                                color: Colors.black.withOpacity(
-                                                    0.5))),
+                                          'Measuring Autism Spectrum Disorders across 10 different scales.',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black.withOpacity(0.5),
+                                          ),
+                                        ),
                                       ],
-                                    ),),
-                                ]),),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 20),
                         ],
                       ))

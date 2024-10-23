@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'autism/aqtest.dart';
 import 'autism/catqtest.dart';
 import 'autism/rbq2atest.dart';
+import 'depression/phq9.dart';
 
 // Category widget for expand/collapse functionality
 class TestCategory extends StatefulWidget {
@@ -63,7 +64,7 @@ class TestsPage extends StatelessWidget {
           TestCategory(
             category: 'Depression',
             tests: [
-              {'name': 'PHQ-9 Test', 'page': CATQTestPage()},
+              {'name': 'PHQ-9 Test', 'page': PHQ9TestPage()},
             ],
           ),
           TestCategory(

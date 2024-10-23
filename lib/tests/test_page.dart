@@ -21,11 +21,13 @@ class _TestPageState extends State<TestPage> {
   final Map<int, int> _answers = {};
   int _currentQuestionIndex = 0;
   String _warningMessage = '';
+  String _testName = 'Test';
 
   @override
   void initState() {
     super.initState();
-    _loadTestData(widget.testName);
+    _testName = widget.testName;
+    _loadTestData(_testName);
   }
 
   Future<void> _loadTestData(String testName) async {
@@ -94,7 +96,7 @@ class _TestPageState extends State<TestPage> {
     if (_questions.isEmpty || _options.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Test'),
+          title: Text(_testName),
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -104,7 +106,7 @@ class _TestPageState extends State<TestPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test'),
+        title: Text(_testName),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
