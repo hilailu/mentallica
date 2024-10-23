@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -8,46 +9,13 @@ import 'medication_taken_page.dart';
 
 class MedicationForm extends StatefulWidget {
   final String id;
-  final String name;
-  final String dose;
-  final String type;
-  final String measurement;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String timeRelation;
-  final int reminderOffset;
-  final List<String> daysTaken;
-  final List<String> schedules;
-  final Map<String, Map<String, bool>> wasTaken;
 
   const MedicationForm({super.key, 
     required this.id,
-    required this.name,
-    required this.dose,
-    required this.type,
-    required this.measurement,
-    required this.startDate,
-    required this.endDate,
-    required this.timeRelation,
-    required this.reminderOffset,
-    required this.daysTaken,
-    required this.schedules,
-    required this.wasTaken,
   });
 
   MedicationForm.empty({super.key})
-      : id = '',
-        name = 'New Medication',
-        dose = '0.5',
-        type = 'Pill',
-        measurement = 'mg',
-        startDate = DateTime.now(),
-        endDate = DateTime.now().add(const Duration(days: 14)),
-        timeRelation = 'before meals',
-        reminderOffset = 5,
-        daysTaken = ['Tue','Thu','Sat'],
-        schedules = ['9:00 AM'],
-        wasTaken = {};
+      : id = '';
 
   @override
   _MedicationFormState createState() => _MedicationFormState();
@@ -67,6 +35,7 @@ class _MedicationFormState extends State<MedicationForm> {
   late List<String> _daysTaken = ['Tue','Thu','Sat'];
   late String _medicationId;
   late Map<String, Map<String, bool>> _wasTaken;
+  bool _isLoading = true;
 
   final List<MedicationType> medicationTypes = [
     MedicationType(name: 'Pill', icon: PhosphorIcons.pill()),
@@ -89,18 +58,43 @@ class _MedicationFormState extends State<MedicationForm> {
   @override
   void initState() {
     super.initState();
-    _medicationId = widget.id;
-    _name = widget.name;
-    _dose = widget.dose;
-    _medicationType = widget.type;
-    _measurement = widget.measurement;
-    _startDate = widget.startDate;
-    _endDate = widget.endDate;
-    _timeRelation = widget.timeRelation;
-    _schedules = widget.schedules;
-    _daysTaken = widget.daysTaken;
-    _reminderOffset = widget.reminderOffset;
-    _wasTaken = widget.wasTaken;
+    _fetchMedicationData();
+  }
+
+  Future<void> _fetchMedicationData() async {
+    if (widget.id == '') {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('medications')
+        .doc(widget.id)
+        .get();
+
+    setState(() {
+      _medicationId = widget.id;
+      _name = doc['name'];
+      _dose = doc['dose'];
+      _medicationType = doc['type'];
+      _measurement = doc['measurement'];
+      _startDate = (doc['startDate'] as Timestamp).toDate();
+      _endDate = (doc['endDate'] as Timestamp).toDate();
+      _timeRelation = doc['timeRelation'];
+      _schedules = List<String>.from(doc['schedules']);
+      _daysTaken = List<String>.from(doc['daysTaken']);
+      _reminderOffset = doc['reminderOffset'];
+
+      _wasTaken = (doc['wasTaken'] as Map<String, dynamic>).map((key, value) {
+        return MapEntry(
+            key,
+            (value as Map<String, dynamic>).map((k, v) => MapEntry(k, v as bool))
+        );
+      });
+      _isLoading = false;
+    });
   }
 
   @override
@@ -128,7 +122,11 @@ class _MedicationFormState extends State<MedicationForm> {
               ),
             ]
         ),
-        body: Padding(
+        body:  _isLoading
+            ? const Center(
+          child: CircularProgressIndicator(),
+        )
+            :Padding(
           padding: const EdgeInsets.all(16.0),
           child: LayoutBuilder(
               builder: (context, constraints) {

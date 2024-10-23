@@ -11,6 +11,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'articles/add_article_page.dart';
 import 'auth/auth.dart';
 import 'journal/calendar.dart';
+import 'meds/pill_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -217,45 +218,7 @@ class _HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(16),
                                     color: Colors.white,
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFE29E85)
-                                              .withOpacity(0.2),
-                                          borderRadius: const BorderRadius
-                                              .all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0, horizontal: 8.0),
-                                        child: const Text('Today',
-                                          style: TextStyle(fontSize: 14,
-                                              color: Color(0xFFE29E85)),),
-                                      ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .center,
-                                        children: [
-                                          const Text(
-                                            '12:00', style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),),
-                                          const SizedBox(width: 5),
-                                          PhosphorIcon(
-                                              PhosphorIcons.clock(),
-                                              size: 20)
-                                        ],
-                                      ),
-                                      const Text('Ibuprofen, 2 pills',
-                                          style: TextStyle(fontSize: 14,)),
-                                    ],
-                                  ),
+                                  child: NextPillWidget(),
                                 ),
                               ]
                           ),

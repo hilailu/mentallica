@@ -110,27 +110,6 @@ class MedicationTab extends StatefulWidget {
                         builder: (context) =>
                             MedicationForm(
                               id: med.id,
-                              name: med['name'],
-                              dose: med['dose'],
-                              type: med['type'],
-                              measurement: med['measurement'],
-                              startDate: (med['startDate'] as Timestamp)
-                                  .toDate(),
-                              endDate: (med['endDate'] as Timestamp).toDate(),
-                              timeRelation: med['timeRelation'],
-                              reminderOffset: med['reminderOffset'],
-                              daysTaken: List<String>.from(med['daysTaken']),
-                              schedules: List<String>.from(med['schedules']),
-                              wasTaken: (med['wasTaken'] as Map<String, dynamic>).map<String, Map<String, bool>>(
-                                    (key, value) {
-                                  return MapEntry(
-                                    key,
-                                    (value as Map<String, dynamic>).map<String, bool>(
-                                          (innerKey, innerValue) => MapEntry(innerKey, innerValue as bool),
-                                    ),
-                                  );
-                                },
-                              ),
                             ),
                       ),
                     ).then((_) {
