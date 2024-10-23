@@ -17,7 +17,7 @@ class ContactDetailsPage extends StatefulWidget {
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
   List<String> _availableSlots = [];
   List<String> _bookedSlots = [];
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate =  DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   String? _selectedSlot;
   bool _loadingSlots = false;
   String? _doctorId;
@@ -117,6 +117,13 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     if (_doctorId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Doctor information not available")));
+      return;
+    }
+
+    String patientId = Auth().userId;
+    if (patientId == '') {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please log in to book an appointment")));
       return;
     }
 

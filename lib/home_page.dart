@@ -4,6 +4,7 @@ import 'package:mentallica/articles/articles_page.dart';
 import 'package:mentallica/journal/journal_entry_page.dart';
 import 'package:mentallica/meds/medication_list_page.dart';
 import 'package:mentallica/schedule/schedule_page.dart';
+import 'package:mentallica/statistics/statistics_page.dart';
 import 'package:mentallica/tests/tests_page.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -116,7 +117,6 @@ class _HomePageState extends State<HomePage> {
                               MaterialPageRoute(
                                   builder: (context) => const TestsPage()),
                             );
-                            // Navigate to Tests screen
                           },
                         ),
                         HomeButton(
@@ -129,15 +129,18 @@ class _HomePageState extends State<HomePage> {
                               MaterialPageRoute(
                                   builder: (context) => ArticlesPage(isDoctor: role == 'Doctor' ? true : false)),
                             );
-                            // Navigate to Articles screen
-                          },
+                            },
                         ),
                         HomeButton(
                           icon: PhosphorIcons.chartPie(),
                           text: 'Stats',
                           color: const Color(0xFF8BACA5),
                           onTap: () {
-                            // Navigate to My Stats screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => StatisticsPage()),
+                            );
                           },
                         ),
                       ],
