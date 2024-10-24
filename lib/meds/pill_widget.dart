@@ -36,8 +36,7 @@ class _NextPillWidgetState extends State<NextPillWidget> {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id;
       return data;
-    })
-        .toList();
+    }).toList();
 
     if (medications.isEmpty) return;
 
@@ -56,13 +55,18 @@ class _NextPillWidgetState extends State<NextPillWidget> {
       String medicationId = medication['id'];
 
       DateTime nextDateForMed = _getNextDoseDate(daysTaken, now);
+      String nextScheduleTime = _getNextTime(schedules, now);
 
-      if (nextDateForMed.isBefore(nextDoseDate ?? DateTime(3000))) {
-        String nextScheduleTime = _getNextTime(schedules, now);
+      DateTime nextFullDoseDateTime = DateFormat('h:mm a').parse(nextScheduleTime);
+      DateTime fullNextDoseDate = DateTime(
+          nextDateForMed.year, nextDateForMed.month, nextDateForMed.day,
+          nextFullDoseDateTime.hour, nextFullDoseDateTime.minute
+      );
 
+      if (fullNextDoseDate.isAfter(now) && fullNextDoseDate.isBefore(nextDoseDate ?? DateTime(3000))) {
         setState(() {
           _medicationId = medicationId;
-          nextDoseDate = nextDateForMed;
+          nextDoseDate = fullNextDoseDate;
           nextTime = nextScheduleTime;
           nextName = name;
           nextDose = dose;
@@ -116,14 +120,20 @@ class _NextPillWidgetState extends State<NextPillWidget> {
 
   String _getNextTime(List<String> schedules, DateTime now) {
     schedules.sort((a, b) => a.compareTo(b));
+
+    DateTime today = DateTime(now.year, now.month, now.day);
     for (String time in schedules) {
-      DateTime scheduleTime = DateFormat('HH:mm').parse(time);
-      if (scheduleTime.isAfter(now)) {
+      DateTime scheduleTime = DateFormat('h:mm a').parse(time);
+      DateTime fullScheduleTime = DateTime(today.year, today.month, today.day, scheduleTime.hour, scheduleTime.minute);
+
+      if (fullScheduleTime.isAfter(now)) {
         return time;
       }
     }
+
     return schedules.first;
   }
+
 
   @override
   Widget build(BuildContext context) {

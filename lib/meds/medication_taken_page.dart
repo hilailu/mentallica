@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'medication_service.dart';
 
 class MedicationTrackingPage extends StatefulWidget {
@@ -9,13 +8,15 @@ class MedicationTrackingPage extends StatefulWidget {
   final List<String> schedules;
   final List<String> daysTaken;
   final Map<String, Map<String, bool>> wasTaken;
+  final DateTime startDate;
 
-  const MedicationTrackingPage({super.key, 
+  const MedicationTrackingPage({super.key,
     required this.medicationId,
     required this.name,
     required this.schedules,
     required this.daysTaken,
     required this.wasTaken,
+    required this.startDate,
   });
 
   @override
@@ -34,12 +35,12 @@ class _MedicationTrackingPageState extends State<MedicationTrackingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.name),
-      ),
-      body: ListView(
-        children: _buildTrackingList(),
-      )
+        appBar: AppBar(
+          title: Text(widget.name),
+        ),
+        body: ListView(
+          children: _buildTrackingList(),
+        )
     );
   }
 
@@ -85,9 +86,15 @@ class _MedicationTrackingPageState extends State<MedicationTrackingPage> {
 
   List<DateTime> _generateDates(DateTime start) {
     List<DateTime> dates = [];
-    for (int i = 0; i < 30; i++) {
-      dates.add(start.subtract(Duration(days: i)));
+
+    DateTime today = DateTime.now();
+    DateTime currentDate = today;
+
+    while (currentDate.isAfter(widget.startDate) || currentDate.isAtSameMomentAs(widget.startDate)) {
+      dates.add(currentDate);
+      currentDate = currentDate.subtract(const Duration(days: 1));
     }
+
     return dates;
   }
 

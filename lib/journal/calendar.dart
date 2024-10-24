@@ -162,6 +162,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ..._events[_selectedDay]?.map((mood) =>
               ListTile(title: Text(mood))) ?? [],
 
+          const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(

@@ -290,28 +290,42 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              // Add padding here
-              child: _isLoading // Check the loading state
+              child: _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _entries.isEmpty
                   ? Center(
-                  child: CircularProgressIndicator()) // Show loading indicator
+                child: Text(
+                  'Not enough data to generate the chart.',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              )
                   : ListView(
                 children: [
                   SizedBox(height: 20),
-                  Center(child: Text('Mood Frequency', style: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyLarge)),
+                  Center(
+                    child: Text(
+                      'Mood Frequency',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge,
+                    ),
+                  ),
                   SizedBox(height: 10),
                   SizedBox(
                     height: 300,
                     child: _buildMoodChart(moodFrequency),
                   ),
                   SizedBox(height: 20),
-                  Center(child: Text(
-                      'Mood Correlation (Positives & Symptoms)', style: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyLarge)),
+                  Center(
+                    child: Text(
+                      'Mood Correlation (Positives & Symptoms)',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge,
+                    ),
+                  ),
                   SizedBox(height: 10),
                   SizedBox(
                     height: 300,

@@ -33,8 +33,8 @@ class _MedicationFormState extends State<MedicationForm> {
   late List<String> _schedules = ['9:00 AM'];
   late int _reminderOffset = 5;
   late List<String> _daysTaken = ['Tue','Thu','Sat'];
-  late String _medicationId;
-  late Map<String, Map<String, bool>> _wasTaken;
+  late String _medicationId = '';
+  late Map<String, Map<String, bool>> _wasTaken = {};
   bool _isLoading = true;
 
   final List<MedicationType> medicationTypes = [
@@ -115,6 +115,7 @@ class _MedicationFormState extends State<MedicationForm> {
                         schedules: List<String>.from(_schedules),
                         daysTaken: _daysTaken,
                         wasTaken: _wasTaken,
+                        startDate: _startDate,
                       ),
                     ),
                   );
