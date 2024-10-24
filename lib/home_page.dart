@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentallica/articles/articles_page.dart';
@@ -21,6 +22,8 @@ import 'articles/add_article_page.dart';
 import 'auth/auth.dart';
 import 'journal/calendar.dart';
 import 'meds/pill_widget.dart';
+import 'meds/wiki/medication_tile_homepage.dart';
+import 'meds/wiki/medication_wiki.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? role = 'Patient';
   String? name = 'User';
+  List<MedicationWiki> _medicationsWiki = [];
 
   final List<Widget> testPages = [
     CATQTestPage(),
@@ -41,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getUserRoleAndName();
+    _loadMedications();
   }
 
   Future<void> _getUserRoleAndName() async {
@@ -52,6 +57,17 @@ class _HomePageState extends State<HomePage> {
         role = userRole;
         name = userName;
       }
+    });
+  }
+
+  Future<void> _loadMedications() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('medications_wiki')
+        .orderBy('name', descending: true)
+        .get();
+
+    setState(() {
+      _medicationsWiki = querySnapshot.docs.map((doc) => MedicationWiki.fromDocument(doc)).toList();
     });
   }
 
@@ -530,7 +546,8 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const AppointmentsPage()),
+                                  builder: (
+                                      context) => const AppointmentsPage()),
                             );
                           },
                         ),
@@ -554,7 +571,10 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ArticlesPage(isDoctor: role == 'Doctor' ? true : false)),
+                                  builder: (context) =>
+                                      ArticlesPage(isDoctor: role == 'Doctor'
+                                          ? true
+                                          : false)),
                             );
                             // Navigate to Articles screen
                           },
@@ -619,7 +639,8 @@ class _HomePageState extends State<HomePage> {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) => AddArticlePage()));
+                                                      builder: (context) =>
+                                                          AddArticlePage()));
                                             },
                                             child: const SizedBox(
                                               width: 120,
@@ -649,278 +670,42 @@ class _HomePageState extends State<HomePage> {
                                 style: TextStyle(
                                     fontSize: 22, fontWeight: FontWeight.bold),
                               ),
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius
-                                      .all(
-                                    Radius.circular(15.0),
-                                  ),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4.0, horizontal: 8.0),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MedicationsInfoPage()));
+                                },
                                 child:
-                                const Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    children: [
-                                      Text('See All ',
-                                        style: TextStyle(fontSize: 14,
-                                            fontWeight: FontWeight.bold),),
-                                      PhosphorIcon(
-                                        PhosphorIconsBold.caretRight, size: 10,)
-                                    ]),
-                              )
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius
+                                        .all(
+                                      Radius.circular(15.0),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8.0),
+                                  child:
+                                  const Row(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .center,
+                                      children: [
+                                        Text('See All ',
+                                          style: TextStyle(fontSize: 14,
+                                              fontWeight: FontWeight.bold),),
+                                        PhosphorIcon(
+                                          PhosphorIconsBold.caretRight, size: 10,)
+                                      ]),
+                                ),)
                             ],
                           ),
-                          Container(
-                            width: 380,
-                            height: 96,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    // Image border
-                                    child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(32),
-                                      // Image radius
-                                      child: Image.asset(
-                                          'assets/images/depression.png',
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16,),
-                                  SizedBox(
-                                    width: 254,
-                                    height: 100,
-                                    child:
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center,
-                                            children: [
-                                              const Text('Depression Test',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                              Text('3 min',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(
-                                                          0.5))),
-                                            ]),
-                                        Text(
-                                            'Based on the Beck Depression Inventory, which measures depression symptoms.',
-                                            style: TextStyle(fontSize: 13,
-                                                color: Colors.black.withOpacity(
-                                                    0.5))),
-                                      ],
-                                    ),),
-                                ]),),
-                          Container(
-                            width: 380,
-                            height: 96,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    // Image border
-                                    child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(32),
-                                      // Image radius
-                                      child: Image.asset(
-                                          'assets/images/autism.png',
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16,),
-                                  SizedBox(
-                                    width: 254,
-                                    height: 100,
-                                    child:
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center,
-                                            children: [
-                                              const Text('Autism Spectrum Test',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                              Text('5 min',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(
-                                                          0.5))),
-                                            ]),
-                                        Text(
-                                            'Measuring Autism Spectrum Disorders across 10 different scales.',
-                                            style: TextStyle(fontSize: 13,
-                                                color: Colors.black.withOpacity(
-                                                    0.5))),
-                                      ],
-                                    ),),
-                                ]),),
-                          Container(
-                            width: 380,
-                            height: 96,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    // Image border
-                                    child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(32),
-                                      // Image radius
-                                      child: Image.asset(
-                                          'assets/images/depression.png',
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16,),
-                                  SizedBox(
-                                    width: 254,
-                                    height: 100,
-                                    child:
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center,
-                                            children: [
-                                              const Text('Depression Test',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                              Text('3 min',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(
-                                                          0.5))),
-                                            ]),
-                                        Text(
-                                            'Based on the Beck Depression Inventory, which measures depression symptoms.',
-                                            style: TextStyle(fontSize: 13,
-                                                color: Colors.black.withOpacity(
-                                                    0.5))),
-                                      ],
-                                    ),),
-                                ]),),
-                          Container(
-                            width: 380,
-                            height: 96,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    // Image border
-                                    child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(32),
-                                      // Image radius
-                                      child: Image.asset(
-                                          'assets/images/autism.png',
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16,),
-                                  SizedBox(
-                                    width: 254,
-                                    height: 100,
-                                    child:
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center,
-                                            children: [
-                                              const Text('Autism Spectrum Test',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                              Text('5 min',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black
-                                                          .withOpacity(
-                                                          0.5))),
-                                            ]),
-                                        Text(
-                                            'Measuring Autism Spectrum Disorders across 10 different scales.',
-                                            style: TextStyle(fontSize: 13,
-                                                color: Colors.black.withOpacity(
-                                                    0.5))),
-                                      ],
-                                    ),),
-                                ]),),
+                          MedicationTileHP(medication: _medicationsWiki[0]),
+                          MedicationTileHP(medication: _medicationsWiki[1]),
+                          MedicationTileHP(medication: _medicationsWiki[2]),
+                          MedicationTileHP(medication: _medicationsWiki[3]),
                           const SizedBox(height: 20),
                         ],
                       ))

@@ -21,11 +21,35 @@ class _ArticlesPageState extends State<ArticlesPage> {
   List<Article> _filteredArticles = [];
   String? _selectedTag;
   bool _sortAscending = true;
+  String _searchQuery = "";
 
   @override
   void initState() {
     super.initState();
     _loadArticles();
+  }
+
+  void _searchArticles(String query) {
+    setState(() {
+      _searchQuery = query;
+      _applyFilters();
+    });
+  }
+
+  void _applyFilters() {
+    List<Article> filtered = _articles;
+
+    if (_selectedTag != null && _selectedTag!.isNotEmpty) {
+      filtered = filtered.where((article) => article.tags.contains(_selectedTag)).toList();
+    }
+
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered.where((article) => article.title.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+    }
+
+    setState(() {
+      _filteredArticles = filtered;
+    });
   }
 
   Future<void> _loadArticles() async {
@@ -36,7 +60,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
     setState(() {
       _articles = querySnapshot.docs.map((doc) => Article.fromDocument(doc)).toList();
-      _filteredArticles = _articles;
+      _applyFilters();
     });
   }
 
@@ -57,7 +81,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
       _articles.sort((a, b) => _sortAscending
           ? a.date.compareTo(b.date)
           : b.date.compareTo(a.date));
-      _filterByTag(_selectedTag);  // Reapply the filter after sorting
+      _filterByTag(_selectedTag);
     });
   }
 
@@ -97,11 +121,28 @@ class _ArticlesPageState extends State<ArticlesPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: _filteredArticles.length,
-        itemBuilder: (context, index) {
-          return ArticleTile(article: _filteredArticles[index]);
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: _searchArticles,
+              decoration: const InputDecoration(
+                hintText: 'Search by article title...',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filteredArticles.length,
+              itemBuilder: (context, index) {
+                return ArticleTile(article: _filteredArticles[index]);
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: widget.isDoctor
           ? FloatingActionButton(
@@ -115,7 +156,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
         },
         child: const Icon(Icons.add),
       )
-          : null,  // FAB is only shown if isDoctor is true
+          : null,
     );
   }
 }

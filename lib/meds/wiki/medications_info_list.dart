@@ -62,7 +62,7 @@ class _MedicationsInfoPageState extends State<MedicationsInfoPage> {
       _medications.sort((a, b) => _sortAscending
           ? a.name.compareTo(b.name)
           : b.name.compareTo(a.name));
-      _applyFilters();  // Reapply the filter after sorting
+      _applyFilters();
     });
   }
 
