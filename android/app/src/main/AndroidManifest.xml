@@ -2,9 +2,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
+        android:enableOnBackInvokedCallback="true"
         android:label="mentallica"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
 
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCf0g__VYpROOAjgkJZM_A75wXgU6ZCWWU"/>

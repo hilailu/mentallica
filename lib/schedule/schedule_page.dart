@@ -173,7 +173,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text('Medication'),
+            title: const Text('Schedule'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

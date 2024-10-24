@@ -13,7 +13,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool visible = false;
-
   String role = "Patient";
   String? errorMessage = "";
   bool isLogin = true;
@@ -21,23 +20,43 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  bool _isProcessing = false;
+
   Future<void> signInWithEmailAndPassword() async {
     try {
-      await Auth().signInWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text);
-    } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage = e.message;
+        _isProcessing = true;
       });
+      await Auth().signInWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text);
+      if (mounted) {
+        route();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          errorMessage = e.message;
+          _isProcessing = false;
+        });
+      }
     }
   }
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text);
-    } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage = e.message;
+        _isProcessing = true;
       });
+      await Auth().createUserWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text);
+      if (mounted) {
+        postDetailsToFirestore();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          errorMessage = e.message;
+          _isProcessing = false;
+        });
+      }
     }
   }
 
@@ -140,33 +159,29 @@ class _LoginPageState extends State<LoginPage> {
 
   void route() {
     User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        if (documentSnapshot.get('role') == "Doctor") {
+    if (user != null) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists && mounted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) =>  HomePage(),
+              builder: (context) => HomePage(),
             ),
           );
-        }else{
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>  HomePage(),
-            ),
-          );
+        } else {
+          if (mounted) {
+            setState(() {
+              errorMessage = "Document doesn't exist";
+              _isProcessing = false;
+            });
+          }
         }
-      } else {
-      setState(() {
-        errorMessage = "Document doesn't exist";
       });
-      }
-    });
+    }
   }
 
   void signIn() async {
@@ -195,14 +210,33 @@ class _LoginPageState extends State<LoginPage> {
   void postDetailsToFirestore() async {
     var user = Auth().currentUser;
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref.doc(user!.uid).set({'email': _controllerEmail.text, 'role': role, 'name': 'User'});
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+
+    await ref.doc(user!.uid).set({
+      'email': _controllerEmail.text,
+      'role': role,
+      'name': 'User'
+    });
+
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
+  }
+
+
+  @override
+  void dispose() {
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(isLogin ? "Login" : "Register")),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -210,23 +244,26 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: 100,
-                child: Icon(isLogin ? Icons.login : Icons.person_add_alt_1, size: 75),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                isLogin ? "Login" : "Register",
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 15),
-              _roleSelection(),
-              _entryField("Email", _controllerEmail),
-              _entryField("Password", _controllerPassword, isPassword: true),
-              _errorMessage(),
-              const SizedBox(height: 10),
-              _submitButton(),
-              _loginOrRegisterButton(),
+              if (_isProcessing) CircularProgressIndicator(),
+              if (!_isProcessing) ...[
+                SizedBox(
+                  height: 100,
+                  child: Icon(isLogin ? Icons.login : Icons.person_add_alt_1, size: 75),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  isLogin ? "Login" : "Register",
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                _roleSelection(),
+                _entryField("Email", _controllerEmail),
+                _entryField("Password", _controllerPassword, isPassword: true),
+                _errorMessage(),
+                const SizedBox(height: 10),
+                _submitButton(),
+                _loginOrRegisterButton(),
+              ],
             ],
           ),
         ),
