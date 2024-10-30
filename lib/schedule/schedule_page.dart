@@ -86,7 +86,6 @@ class _ScheduleFormState extends State<ScheduleForm> {
     }
   }
 
-
   Future<void> _saveOrUpdateSchedule() async {
     final doctorId = Auth().userId;
     final contactId = _selectedContact['id'];
@@ -118,8 +117,6 @@ class _ScheduleFormState extends State<ScheduleForm> {
       });
     }
   }
-
-
 
   void _showContactSearch() {
     showModalBottomSheet(

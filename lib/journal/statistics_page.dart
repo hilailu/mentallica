@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../auth/auth.dart';
-import '../journal/journal_entry.dart';
+import 'journal_entry.dart';
 
 class StatisticsPage extends StatefulWidget {
   @override

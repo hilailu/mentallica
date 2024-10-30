@@ -23,7 +23,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
         'tags': _selectedTags.toList(),
       });
 
-      Navigator.pop(context);  // Go back to the Articles page
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),

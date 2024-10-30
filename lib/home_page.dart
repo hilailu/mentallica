@@ -10,7 +10,7 @@ import 'package:mentallica/meds/wiki/medications_info_list.dart';
 import 'package:mentallica/schedule/appointment_list.dart';
 import 'package:mentallica/schedule/appointment_widget.dart';
 import 'package:mentallica/schedule/schedule_page.dart';
-import 'package:mentallica/statistics/statistics_page.dart';
+import 'package:mentallica/journal/statistics_page.dart';
 import 'package:mentallica/tests/autism/aqtest.dart';
 import 'package:mentallica/tests/autism/catqtest.dart';
 import 'package:mentallica/tests/autism/rbq2atest.dart';
@@ -706,7 +706,7 @@ class _HomePageState extends State<HomePage> {
                           MedicationTileHP(medication: _medicationsWiki[1]),
                           MedicationTileHP(medication: _medicationsWiki[2]),
                           MedicationTileHP(medication: _medicationsWiki[3]),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 5),
                         ],
                       ))
               ),

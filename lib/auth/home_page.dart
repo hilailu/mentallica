@@ -56,16 +56,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _deleteProfile() async {
     try {
-      // Delete user data from Firestore
       await FirebaseFirestore.instance.collection('users').doc(user!.uid).delete();
-
-      // Delete user from Firebase Auth
       await user!.delete();
-
-      // Sign out the user and navigate to login page
       await Auth().signOut();
 
-      // Navigate to login/registration screen
       Navigator.pushReplacementNamed(context, '/login');
 
       ScaffoldMessenger.of(context).showSnackBar(
