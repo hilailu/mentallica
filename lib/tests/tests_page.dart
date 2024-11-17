@@ -5,7 +5,6 @@ import 'autism/catqtest.dart';
 import 'autism/rbq2atest.dart';
 import 'depression/phq9.dart';
 
-// Category widget for expand/collapse functionality
 class TestCategory extends StatefulWidget {
   final String category;
   final List<Map<String, dynamic>> tests;

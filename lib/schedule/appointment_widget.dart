@@ -66,52 +66,60 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 180,
-        height: 120,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.white,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFE29E85).withOpacity(0.2),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(15.0),
+      width: 180,
+      height: 120,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFE29E85).withOpacity(0.2),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(15.0),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+            child: Text(
+              _timeMessage,
+              style: const TextStyle(fontSize: 14, color: Color(0xFFE29E85)),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                _appointmentTime,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
                 ),
               ),
-              padding: const EdgeInsets.symmetric(
-                  vertical: 4.0, horizontal: 8.0),
-              child: Text(_timeMessage,
-                style: const TextStyle(fontSize: 14,
-                    color: Color(0xFFE29E85)),),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  _appointmentTime,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                PhosphorIcon(
-                  PhosphorIcons.clock(),
-                  size: 20,
-                ),
-              ],
-            ),
-            Text(
-              _patientName,
-              style: const TextStyle(fontSize: 14),
-            ),
-          ],
-        ));
+              const SizedBox(width: 5),
+              PhosphorIcon(
+                PhosphorIcons.clock(),
+                size: 20,
+              ),
+            ],
+          ),
+          Text(
+            _patientName,
+            style: const TextStyle(fontSize: 14),
+          ),
+        ],
+      ),
+    );
   }
 }

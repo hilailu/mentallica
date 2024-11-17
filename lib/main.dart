@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mentallica',
       theme: ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: const Color(0xFF8BACA5),
         fontFamily: GoogleFonts.nunito().fontFamily,
         colorScheme: ColorScheme.fromSeed(
             background: Colors.white,

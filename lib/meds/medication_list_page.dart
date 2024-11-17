@@ -21,8 +21,14 @@ class _MedicationPageState extends State<MedicationPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Medications'),
+          title: const Text(
+            'Medications',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: const Color(0xFF8BACA5),
           bottom: const TabBar(
+            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+            indicatorColor: Colors.white,
             tabs: [
               Tab(text: 'Active'),
               Tab(text: 'Completed'),
@@ -75,7 +81,12 @@ class MedicationTab extends StatefulWidget {
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text('No medications found.'));
+              return const Center(
+                child: Text(
+                  'No medications found.',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),
+                ),
+              );
             }
 
             List<DocumentSnapshot> meds = snapshot.data!.docs;
@@ -92,9 +103,7 @@ class MedicationTab extends StatefulWidget {
                 String formattedStartDate = formatter.format(startDate);
                 String formattedEndDate = formatter.format(endDate);
 
-                final totalDays = endDate
-                    .difference(startDate)
-                    .inDays;
+                final totalDays = endDate.difference(startDate).inDays;
                 final progressDays = calculateDaysProgress(startDate, endDate);
 
                 return MedicationCard(
@@ -107,14 +116,10 @@ class MedicationTab extends StatefulWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            MedicationForm(
-                              id: med.id,
-                            ),
+                        builder: (context) => MedicationForm(id: med.id),
                       ),
                     ).then((_) {
-                      setState(() {
-                      });
+                      setState(() {});
                     });
                   },
                 );
@@ -130,12 +135,12 @@ class MedicationTab extends StatefulWidget {
                 builder: (context) => MedicationForm.empty(),
               ),
             ).then((_) {
-              setState(() {
-              });
+              setState(() {});
             });
           },
           tooltip: 'Add Medication',
-          child: const Icon(Icons.add),
+          backgroundColor: const Color(0xFF8BACA5),
+          child: const Icon(Icons.add, size: 28),
         ),
       );
     }
@@ -164,10 +169,11 @@ class MedicationCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -177,26 +183,36 @@ class MedicationCard extends StatelessWidget {
                 name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 20,
+                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 '$startDate - $endDate',
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: LinearProgressIndicator(
+                  value: progressDays / totalDays,
+                  minHeight: 8,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF8BACA5)),
+                ),
               ),
               const SizedBox(height: 12),
-              // Progress bar to show medication course progress
-              LinearProgressIndicator(
-                value: progressDays / totalDays, // Shows progress as a fraction
-                minHeight: 6,
-                backgroundColor: Colors.grey[300],
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-              const SizedBox(height: 8),
               Text(
                 '$progressDays out of $totalDays days completed',
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
               ),
             ],
           ),

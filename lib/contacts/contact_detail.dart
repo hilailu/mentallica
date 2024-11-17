@@ -143,7 +143,11 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.contact.name),
+        title: const Text(
+          'Contact Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -152,18 +156,14 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           children: [
             Text(
               widget.contact.name,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headlineSmall,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
             Text(
               widget.contact.address,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -187,74 +187,81 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
             ),
             const SizedBox(height: 20),
-            Text('Select date', style: Theme
-                .of(context)
-                .textTheme
-                .bodyLarge),
+            Text('Select date', style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 8),
             SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: _selectedDate,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 30)),
-                    );
-                    if (picked != null) {
-                      setState(() {
-                        _selectedDate = picked;
-                        _fetchDoctorIdAndSchedule();
-                      });
-                    }
-                  },
-                  child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
-                )),
-            const SizedBox(height: 16),
-            Text('Available time slots', style: Theme
-                .of(context)
-                .textTheme
-                .bodyLarge),
-            const SizedBox(height: 8),
-            _loadingSlots
-                ? CircularProgressIndicator()
-                : Wrap(
-              spacing: 8.0,
-              runSpacing: 4.0,
-              children: _availableSlots.map((slot) {
-                bool isBooked = _bookedSlots.contains(slot);
-                return ChoiceChip(
-                  showCheckmark: false,
-                  label: Text(
-                    slot,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  selected: _selectedSlot == slot,
-                  onSelected: isBooked
-                      ? null
-                      : (selected) {
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 30)),
+                  );
+                  if (picked != null) {
                     setState(() {
-                      _selectedSlot = selected ? slot : null;
+                      _selectedDate = picked;
+                      _fetchDoctorIdAndSchedule();
                     });
-                  },
-                  selectedColor: const Color(0xFF8BACA5),
-                  disabledColor: const Color(0xFFc8cfcd),
-                  labelStyle: TextStyle(
-                    color: isBooked ? Colors.grey : Colors.black,
-                  ),
-                );
-              }).toList(),
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8BACA5),
+                ),
+                child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
+              ),
             ),
             const SizedBox(height: 16),
+            Text('Available time slots', style: Theme.of(context).textTheme.bodyLarge),
+            const SizedBox(height: 8),
+            if (_loadingSlots)
+              const CircularProgressIndicator()
+            else if (_availableSlots.isEmpty)
+              const Text(
+                'No available time slots',
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              )
+            else
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: _availableSlots.map((slot) {
+                  bool isBooked = _bookedSlots.contains(slot);
+                  return ChoiceChip(
+                    showCheckmark: false,
+                    label: Text(
+                      slot,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    selected: _selectedSlot == slot,
+                    onSelected: isBooked
+                        ? null
+                        : (selected) {
+                      setState(() {
+                        _selectedSlot = selected ? slot : null;
+                      });
+                    },
+                    selectedColor: const Color(0xFF8BACA5),
+                    disabledColor: const Color(0xFFc8cfcd),
+                    labelStyle: TextStyle(
+                      color: isBooked ? Colors.grey : Colors.black,
+                    ),
+                  );
+                }).toList(),
+              ),
+            const SizedBox(height: 16),
             SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _selectedSlot == null ? null : _bookAppointment,
-                  child: Text('Book Appointment'),
-                )),
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _selectedSlot == null ? null : _bookAppointment,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8BACA5),
+                  disabledBackgroundColor: const Color(0xFFc8cfcd),
+                ),
+                child: const Text('Book Appointment'),
+              ),
+            ),
           ],
         ),
       ),

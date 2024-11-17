@@ -23,6 +23,9 @@ class ArticleTile extends StatelessWidget {
       onTap: () => _navigateToArticleDetail(context),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shadowColor: Colors.grey.withOpacity(0.2),
+        elevation: 4,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -30,12 +33,16 @@ class ArticleTile extends StatelessWidget {
             children: [
               Text(
                 article.title,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 DateFormat.yMMMMd().format(article.date.toDate()),
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -43,6 +50,8 @@ class ArticleTile extends StatelessWidget {
                 children: article.tags
                     .map((tag) => Chip(
                   label: Text(tag),
+                  backgroundColor: const Color(0xFF8BACA5),
+                  labelStyle: const TextStyle(color: Colors.white),
                 ))
                     .toList(),
               ),

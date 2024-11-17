@@ -89,7 +89,11 @@ class _ArticlesPageState extends State<ArticlesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Articles'),
+        title: const Text(
+          'Articles',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
@@ -116,36 +120,55 @@ class _ArticlesPageState extends State<ArticlesPage> {
             },
           ),
           IconButton(
-            icon: Icon(_sortAscending ? Icons.arrow_downward : Icons.arrow_upward),
+            icon: Icon(
+                _sortAscending ? Icons.arrow_downward : Icons.arrow_upward),
             onPressed: _sortArticles,
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: _searchArticles,
-              decoration: const InputDecoration(
-                hintText: 'Search by article title...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        color: const Color(0xFFF5F5F5),
+        child: Column(
+          children: [
+            const SizedBox(height: 6),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              child: TextField(
+                onChanged: _searchArticles,
+                decoration: const InputDecoration(
+                  hintText: 'Search by article title...',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredArticles.length,
-              itemBuilder: (context, index) {
-                return ArticleTile(article: _filteredArticles[index]);
-              },
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredArticles.length,
+                itemBuilder: (context, index) {
+                  return ArticleTile(article: _filteredArticles[index]);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: widget.isDoctor
           ? FloatingActionButton(
+        backgroundColor: const Color(0xFF8BACA5),
         onPressed: () {
           Navigator.push(
             context,
@@ -154,7 +177,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       )
           : null,
     );

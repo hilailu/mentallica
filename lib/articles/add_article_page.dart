@@ -36,87 +36,94 @@ class _AddArticlePageState extends State<AddArticlePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Article'),
+        backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            // Title Field
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
               ),
-            ),
-
-            // Date Picker
-            ListTile(
-              title: const Text('Date'),
-              subtitle: Text(
-                  '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () async {
-                DateTime? picked = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDate,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (picked != null) {
-                  setState(() {
-                    _selectedDate = picked;
-                  });
-                }
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Tags (Choice Chips)
-            const Text('Tags'),
-            Wrap(
-              spacing: 8.0,
-              children: _availableTags.map((tag) {
-                final selected = _selectedTags.contains(tag);
-                return ChoiceChip(
-                  showCheckmark: false,
-                  label: Text(tag),
-                  selected: selected,
-                  selectedColor: const Color(0xFF8BACA5),
-                  onSelected: (bool selected) {
+            ],
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              TextField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                title: const Text('Date'),
+                subtitle: Text(
+                    '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (picked != null) {
                     setState(() {
-                      if (selected) {
-                        _selectedTags.add(tag);
-                      } else {
-                        _selectedTags.remove(tag);
-                      }
+                      _selectedDate = picked;
                     });
-                  },
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 16),
-            const Text('Article Content'),
-            const SizedBox(height: 10),
-
-            // Content Field
-            TextField(
-              controller: _contentController,
-              maxLines: 15,
-              decoration: const InputDecoration(
-                alignLabelWithHint: true,
-                labelText: 'Content',
-                border: OutlineInputBorder(),
+                  }
+                },
               ),
-            ),
-
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _saveArticle,
-              child: const Text('Save'),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8.0,
+                children: _availableTags.map((tag) {
+                  final selected = _selectedTags.contains(tag);
+                  return ChoiceChip(
+                    showCheckmark: false,
+                    label: Text(tag),
+                    selected: selected,
+                    selectedColor: const Color(0xFF8BACA5),
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedTags.add(tag);
+                        } else {
+                          _selectedTags.remove(tag);
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _contentController,
+                maxLines: 15,
+                decoration: const InputDecoration(
+                  labelText: 'Content',
+                  border: OutlineInputBorder(),
+                  alignLabelWithHint: true,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _saveArticle,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8BACA5),
+                ),
+                child: const Text('Save'),
+              ),
+            ],
+          ),
         ),
       ),
     );

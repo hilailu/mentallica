@@ -79,27 +79,58 @@ class _HomePageState extends State<HomePage> {
 
   Widget _userId() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
           controller: _nameController,
-          decoration: const InputDecoration(labelText: 'Name'),
+          decoration: InputDecoration(
+            labelText: 'Name',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            prefixIcon: const Icon(Icons.person),
+          ),
         ),
+        const SizedBox(height: 15),
         TextField(
           controller: _emailController,
-          decoration: const InputDecoration(labelText: 'Email'),
+          decoration: InputDecoration(
+            labelText: 'Email',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            prefixIcon: const Icon(Icons.email),
+          ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 25),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: _deleteProfile,
-    style: ElevatedButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text("Delete Profile"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              icon: const Icon(Icons.delete, color: Colors.white),
+              label: const Text("Delete Profile"),
             ),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: _updateUserDetails,
-              child: const Text("Save Changes"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              icon: const Icon(Icons.save, color: Colors.white),
+              label: const Text("Save Changes"),
             ),
           ],
         ),
@@ -108,10 +139,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _signOutButton() {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: signOut,
-        style: ElevatedButton.styleFrom(foregroundColor: Colors.red),
-      child: const Text("Sign out"),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      icon: const Icon(Icons.logout, color: Colors.white),
+      label: const Text("Sign Out"),
     );
   }
 
@@ -119,18 +158,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile Page"),
+        title: const Text(
+          "Profile Page",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _userId(),
-            const SizedBox(height: 20),
-            _signOutButton(),
-          ],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.grey,
+                child: Icon(
+                  Icons.person,
+                  size: 60,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _userId(),
+              const SizedBox(height: 30),
+              _signOutButton(),
+            ],
+          ),
         ),
       ),
     );

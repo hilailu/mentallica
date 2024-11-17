@@ -77,11 +77,15 @@ class _ContactsPageState extends State<ContactsPage> {
   Widget build(BuildContext context) {
     if (_permissionDenied) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Contacts')),
+        appBar: AppBar(title: const Text(
+          'Contacts',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),),
+        backgroundColor: const Color(0xFF8BACA5),
         body: Center(
           child: Text(
             'Please enable location services to use this feature.',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[700]),
             textAlign: TextAlign.center,
           ),
         ),
@@ -90,7 +94,11 @@ class _ContactsPageState extends State<ContactsPage> {
 
     if (_currentPosition == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Contacts')),
+        appBar: AppBar(title: const Text(
+          'Contacts',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),),
+        backgroundColor: const Color(0xFF8BACA5),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -99,10 +107,15 @@ class _ContactsPageState extends State<ContactsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contacts'),
+        title: const Text(
+          'Contacts',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
         actions: [
           IconButton(
-            icon: Icon(_showMap ? Icons.list : Icons.map),
+            icon: Icon(_showMap ? Icons.list_alt : Icons.map, size: 28),
+            tooltip: _showMap ? 'Switch to List View' : 'Switch to Map View',
             onPressed: () {
               setState(() {
                 _showMap = !_showMap;
@@ -112,6 +125,35 @@ class _ContactsPageState extends State<ContactsPage> {
         ],
       ),
       body: _showMap ? _buildMap() : _buildList(),
+    );
+  }
+
+  Widget _buildList() {
+    return ListView.separated(
+      itemCount: _contacts.length,
+      separatorBuilder: (context, index) => Divider(color: Colors.grey[300]),
+      itemBuilder: (context, index) {
+        final contact = _contacts[index];
+        final distance = _calculateDistance(contact);
+
+        return ListTile(
+          leading: const Icon(Icons.person_pin_circle, color: Color(0xFF8BACA5), size: 40),
+          title: Text(contact.name, style: Theme.of(context).textTheme.bodyLarge),
+          subtitle: Text(contact.address),
+          trailing: Chip(
+            label: Text('${distance.toStringAsFixed(2)} km', style: const TextStyle(fontSize: 14, color: Colors.white)),
+            backgroundColor: const Color(0xFF8BACA5),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ContactDetailsPage(contact: contact),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -144,30 +186,6 @@ class _ContactsPageState extends State<ContactsPage> {
         zoom: 11.0,
       ),
       markers: markers,
-    );
-  }
-
-  Widget _buildList() {
-    return ListView.builder(
-      itemCount: _contacts.length,
-      itemBuilder: (context, index) {
-        final contact = _contacts[index];
-        final distance = _calculateDistance(contact);
-
-        return ListTile(
-          title: Text(contact.name),
-          subtitle: Text(contact.address),
-          trailing: Text('${distance.toStringAsFixed(2)} km'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ContactDetailsPage(contact: contact),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 
