@@ -35,7 +35,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Article'),
+        title: const Text('Add New Article', style: TextStyle(fontWeight: FontWeight.bold),),
         backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Padding(
@@ -57,10 +57,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
             children: [
               TextField(
                 controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: _roundedInputDecoration('Title')
               ),
               const SizedBox(height: 16),
               ListTile(
@@ -82,7 +79,12 @@ class _AddArticlePageState extends State<AddArticlePage> {
                   }
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
+              const Text(' Tags', style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.black87,
+              ),),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
                 children: _availableTags.map((tag) {
@@ -108,11 +110,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
               TextField(
                 controller: _contentController,
                 maxLines: 15,
-                decoration: const InputDecoration(
-                  labelText: 'Content',
-                  border: OutlineInputBorder(),
-                  alignLabelWithHint: true,
-                ),
+                decoration: _roundedInputDecoration('Article content...'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -120,12 +118,35 @@ class _AddArticlePageState extends State<AddArticlePage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8BACA5),
                 ),
-                child: const Text('Save'),
+                child: const Text('Save', style: TextStyle(color: Colors.white),),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  InputDecoration _roundedInputDecoration(String label) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      labelText: label,
+      alignLabelWithHint: true,
+      contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: const BorderSide(color: Colors.blueAccent),
+      ),
+      hintStyle: const TextStyle(color: Colors.grey),
     );
   }
 }

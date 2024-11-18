@@ -21,7 +21,11 @@ class MedicationTile extends StatelessWidget {
     return InkWell(
       onTap: () => _navigateToMedicationDetail(context),
       child: Card(
+        color: Colors.white,
         margin: const EdgeInsets.symmetric(vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shadowColor: Colors.grey.withOpacity(0.2),
+        elevation: 4,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -29,12 +33,18 @@ class MedicationTile extends StatelessWidget {
             children: [
               Text(
                 medication.name,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 medication.description,
-                style: Theme.of(context).textTheme.bodyMedium,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -42,6 +52,8 @@ class MedicationTile extends StatelessWidget {
                 children: medication.tags
                     .map((tag) => Chip(
                   label: Text(tag),
+                  backgroundColor: const Color(0xFF8BACA5),
+                  labelStyle: const TextStyle(color: Colors.white),
                 ))
                     .toList(),
               ),

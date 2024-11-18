@@ -19,8 +19,14 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Appointments'),
+          title: const Text(
+            'Appointments',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: const Color(0xFF8BACA5),
           bottom: const TabBar(
+            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+            indicatorColor: Colors.white,
             tabs: [
               Tab(text: 'Future'),
               Tab(text: 'Completed'),
@@ -140,10 +146,11 @@ class AppointmentCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -152,14 +159,19 @@ class AppointmentCard extends StatelessWidget {
               Text(
                 '$date, $time',
                 style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 patientName,
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
           ),

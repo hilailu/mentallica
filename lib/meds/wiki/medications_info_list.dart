@@ -77,7 +77,11 @@ class _MedicationsInfoPageState extends State<MedicationsInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Medications'),
+        title: const Text(
+          'Medications',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
@@ -94,43 +98,61 @@ class _MedicationsInfoPageState extends State<MedicationsInfoPage> {
                   child: Text('All'),
                 ),
                 ..._medications
-                    .expand((med) => med.tags)
+                    .expand((article) => article.tags)
                     .toSet()
                     .map((tag) => PopupMenuItem<String>(
                   value: tag,
                   child: Text(tag),
-                )),
+                ))
               ];
             },
           ),
           IconButton(
-            icon: Icon(_sortAscending ? Icons.arrow_downward : Icons.arrow_upward),
+            icon: Icon(
+                _sortAscending ? Icons.arrow_downward : Icons.arrow_upward),
             onPressed: _sortMedications,
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: _searchMedications,
-              decoration: const InputDecoration(
-                hintText: 'Search by medication name...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        color: const Color(0xFFF5F5F5),
+        child: Column(
+          children: [
+            const SizedBox(height: 6),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              child: TextField(
+                onChanged: _searchMedications,
+                decoration: const InputDecoration(
+                  hintText: 'Search by medication name...',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredMedications.length,
-              itemBuilder: (context, index) {
-                return MedicationTile(medication: _filteredMedications[index]);
-              },
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredMedications.length,
+                itemBuilder: (context, index) {
+                  return MedicationTile(medication: _filteredMedications[index]);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

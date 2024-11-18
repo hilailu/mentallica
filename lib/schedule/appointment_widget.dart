@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mentallica/schedule/appointment_list.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../auth/auth.dart';
@@ -29,43 +31,73 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
     QuerySnapshot appointmentsSnapshot = await FirebaseFirestore.instance
         .collection('appointments')
         .where('doctorId', isEqualTo: doctorId)
+        .where('date', isGreaterThanOrEqualTo: Timestamp.now())
         .orderBy('date', descending: false)
-        .orderBy('timeSlot', descending: false)
-        .limit(1)
         .get();
 
     if (appointmentsSnapshot.docs.isNotEmpty) {
-      var appointment = appointmentsSnapshot.docs.first.data() as Map<
-          String,
-          dynamic>;
+      DateTime now = DateTime.now();
+      DateTime? closestDateTime;
+      Map<String, dynamic>? closestAppointment;
 
-      DateTime appointmentDate = (appointment['date'] as Timestamp).toDate();
-      String timeSlot = appointment['timeSlot'];
-      String patientId = appointment['patientId'];
+      for (var doc in appointmentsSnapshot.docs) {
+        var appointment = doc.data() as Map<String, dynamic>;
+        DateTime appointmentDate = (appointment['date'] as Timestamp).toDate();
+        String timeSlot = appointment['timeSlot'];
 
-      DocumentSnapshot patientSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(patientId)
-          .get();
-      String patientName = patientSnapshot['name'];
+        DateTime timeSlotDateTime = DateFormat('h:mm a').parse(timeSlot);
+        DateTime fullAppointmentDate = DateTime(
+          appointmentDate.year,
+          appointmentDate.month,
+          appointmentDate.day,
+          timeSlotDateTime.hour,
+          timeSlotDateTime.minute,
+        );
 
-      DateTime today = DateTime.now();
-      Duration difference = appointmentDate.difference(today);
-      String timeMessage = difference.inDays == 0
-          ? 'Today'
-          : 'in ${difference.inDays} days';
+        if (fullAppointmentDate.isAfter(now) &&
+            (closestDateTime == null || fullAppointmentDate.isBefore(closestDateTime))) {
+          closestDateTime = fullAppointmentDate;
+          closestAppointment = appointment;
+        }
+      }
 
-      setState(() {
-        _appointmentTime = timeSlot;
-        _patientName = patientName;
-        _timeMessage = timeMessage;
-      });
+      if (closestAppointment != null) {
+        String patientId = closestAppointment['patientId'];
+        DocumentSnapshot patientSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(patientId)
+            .get();
+        String patientName = patientSnapshot['name'];
+
+        String dayInfo;
+        if (now.year == closestDateTime!.year && now.month == closestDateTime!.month && now.day == closestDateTime!.day) {
+          dayInfo = 'Today';
+        } else {
+          int daysDifference = closestDateTime!.difference(now).inDays;
+          dayInfo = 'in ${daysDifference + 1} day(s)';
+        }
+
+        setState(() {
+          _appointmentTime = closestAppointment?['timeSlot'];
+          _patientName = patientName;
+          _timeMessage = dayInfo;
+        });
+      }
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+        onTap: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const AppointmentsPage()));
+    },
+    child: Container(
       width: 180,
       height: 120,
       padding: const EdgeInsets.all(16),
@@ -120,6 +152,6 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

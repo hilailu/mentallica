@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../auth/auth.dart';
 
@@ -166,130 +167,193 @@ class _ScheduleFormState extends State<ScheduleForm> {
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('Schedule'),
+      appBar: AppBar(
+        title: const Text(
+          'Schedule',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: LayoutBuilder(
-              builder: (context, constraints) {
-                double daysChipWidth = (constraints.maxWidth -
-                    (days.length - 1) * 8) / days.length;
-
-                return ListView(
-                  children: [
-                    const Text('Workplace'),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: _showContactSearch,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Select Location',
-                          border: OutlineInputBorder(),
-                        ),
-                        child: Text(_selectedContact['name'] ?? 'Tap to select a contact'),
+        backgroundColor: const Color(0xFF8BACA5)
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.only(bottom: 16.0),
+              decoration: _boxDecoration(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Workplace', style: _sectionTitleStyle()),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: _showContactSearch,
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        labelText: 'Select Location',
+                        border: OutlineInputBorder(),
                       ),
+                      child: Text(_selectedContact['name'] ?? 'Tap to select a contact'),
                     ),
-                    const SizedBox(height: 20),
-                    const Text('Working Days'),
-                    Wrap(
-                      spacing: 8.0,
-                      children: days.map((day) {
-                        bool selected = _workingDays.contains(day);
-                        return SizedBox(
-                          width: daysChipWidth,
-                          child: ChoiceChip(
-                            padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 2.0),
-                            showCheckmark: false,
-                            selectedColor: const Color(0xFF8BACA5),
-                            label: Center(
-                              child: Text(
-                                day,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            selected: selected,
-                            onSelected: (selected) {
-                              setState(() {
-                                if (selected) {
-                                  _workingDays.add(day);
-                                } else {
-                                  _workingDays.remove(day);
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text('Schedule'),
-                    Column(
-                      children: _schedules
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        int index = entry.key;
-                        String time = entry.value;
-                        return ListTile(
-                          title: Text(index == 0 ? 'Start' : 'End'),
-                          trailing: Text(time),
-                          onTap: () async {
-                            TimeOfDay? selectedTime = await showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            );
-                            if (selectedTime != null) {
-                              setState(() {
-                                _schedules[index] =
-                                    selectedTime.format(context);
-                              });
-                            }
+                  ),
+                ],
+              ),
+            ),
+
+            // Course Duration Section
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.only(bottom: 16.0),
+              decoration: _boxDecoration(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Working days', style: _sectionTitleStyle()),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6.0,
+                    children: days.map((day) {
+                      bool selected = _workingDays.contains(day);
+                      return SizedBox(
+                        width: 44,
+                        child: ChoiceChip(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: -2.0, vertical: 10.0),
+                          label: Center(child: Text(
+                              day, style: const TextStyle(fontSize: 12))),
+                          showCheckmark: false,
+                          selected: selected,
+                          selectedColor: const Color(0xFF8BACA5),
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _workingDays.add(day);
+                              } else {
+                                _workingDays.remove(day);
+                              }
+                            });
                           },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text('Lunch Break'),
-                    Column(
-                      children: _lunchBreak
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        int index = entry.key;
-                        String time = entry.value;
-                        return ListTile(
-                          title: Text(index == 0 ? 'Start' : 'End'),
-                          trailing: Text(time),
-                          onTap: () async {
-                            TimeOfDay? selectedTime = await showTimePicker(
-                              context: context,
-                              initialTime: TimeOfDay.now(),
-                            );
-                            if (selectedTime != null) {
-                              setState(() {
-                                _lunchBreak[index] =
-                                    selectedTime.format(context);
-                              });
-                            }
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        _saveOrUpdateSchedule();
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Save'),
-                    ),
-                  ],
-                );
-              }),
-        ));
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.only(bottom: 16.0),
+              decoration: _boxDecoration(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Working hours', style: _sectionTitleStyle()),
+                  const SizedBox(height: 8),
+                  Column(
+                    children: _schedules
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                      int index = entry.key;
+                      String time = entry.value;
+                      return ListTile(
+                        title: Text(index == 0 ? 'Start' : 'End'),
+                        trailing: Text(time),
+                        onTap: () async {
+                          TimeOfDay? selectedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (selectedTime != null) {
+                            setState(() {
+                              _schedules[index] = selectedTime.format(context);
+                            });
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.only(bottom: 16.0),
+              decoration: _boxDecoration(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Lunch break', style: _sectionTitleStyle()),
+                  const SizedBox(height: 8),
+                  Column(
+                    children: _lunchBreak
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                      int index = entry.key;
+                      String time = entry.value;
+                      return ListTile(
+                        title: Text(index == 0 ? 'Start' : 'End'),
+                        trailing: Text(time),
+                        onTap: () async {
+                          TimeOfDay? selectedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (selectedTime != null) {
+                            setState(() {
+                              _lunchBreak[index] = selectedTime.format(context);
+                            });
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _saveOrUpdateSchedule();
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF8BACA5),
+              ),
+              child: const Text('Save', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration _boxDecoration() {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.0),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+      border: Border.all(
+        color: Colors.grey.shade300,
+      ),
+    );
+  }
+
+  TextStyle _sectionTitleStyle() {
+    return const TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.bold,
+      color: Colors.black87,
+    );
   }
 }
