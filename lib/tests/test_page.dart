@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TestPage extends StatefulWidget {
   final String testName;
-  final Function(Map<int, int>) calculateResults;
+  final Map<String, int> Function(Map<int, int>) calculateResults;
 
   const TestPage({
     super.key,
@@ -21,18 +21,19 @@ class _TestPageState extends State<TestPage> {
   final Map<int, int> _answers = {};
   int _currentQuestionIndex = 0;
   String _warningMessage = '';
-  String _testName = 'Test';
 
   @override
   void initState() {
     super.initState();
-    _testName = widget.testName;
-    _loadTestData(_testName);
+    _loadTestData(widget.testName);
   }
 
   Future<void> _loadTestData(String testName) async {
     try {
-      final doc = await FirebaseFirestore.instance.collection('tests').doc(testName).get();
+      final doc = await FirebaseFirestore.instance
+          .collection('tests')
+          .doc(testName)
+          .get();
       if (doc.exists) {
         setState(() {
           _questions = List<String>.from(doc['questions']);
@@ -96,7 +97,11 @@ class _TestPageState extends State<TestPage> {
     if (_questions.isEmpty || _options.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(_testName),
+          title: Text(
+            widget.testName.toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+          ),
+          backgroundColor: const Color(0xFF8BACA5),
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -106,54 +111,124 @@ class _TestPageState extends State<TestPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_testName),
+        title: Text(
+          widget.testName.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              _questions[_currentQuestionIndex],
-              style: Theme.of(context).textTheme.headlineSmall,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                //color: Colors.white,
+                color: const Color(0xFFEFF5F6),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Text(
+                _questions[_currentQuestionIndex],
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headlineSmall,
+              ),
             ),
             const SizedBox(height: 20),
-            ..._options.asMap().entries.map((entry) {
+            ..._options
+                .asMap()
+                .entries
+                .map((entry) {
               int index = entry.key;
               String option = entry.value;
-              return RadioListTile<int>(
-                title: Text(option),
-                value: index + 1,
-                groupValue: _answers[_currentQuestionIndex],
-                onChanged: (int? value) {
-                  _answerQuestion(value!);
-                },
+
+              return Card(
+                color: Colors.grey.shade50,
+                elevation: 2,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: RadioListTile<int>(
+                  title: Text(option),
+                  value: index + 1,
+                  groupValue: _answers[_currentQuestionIndex],
+                  onChanged: (int? value) {
+                    _answerQuestion(value!);
+                  },
+                ),
               );
             }),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             if (_warningMessage.isNotEmpty)
               Text(
                 _warningMessage,
                 style: const TextStyle(color: Colors.red),
               ),
+            const SizedBox(height: 10),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (_currentQuestionIndex > 0)
                   ElevatedButton(
                     onPressed: _previousQuestion,
-                    child: const Text('Previous'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      fixedSize: const Size(140, 50),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.navigate_before, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text(
+                          'Previous',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
                   )
                 else
-                  const Spacer(),
+                  const SizedBox(width: 140),
+                const Spacer(),
                 ElevatedButton(
                   onPressed: _nextQuestion,
-                  child: Text(
-                      _currentQuestionIndex < _questions.length - 1 ? 'Next' : 'Results'
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    fixedSize: const Size(140, 50),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        _currentQuestionIndex < _questions.length - 1 ? 'Next' : 'Results',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(width: 10),
+                      const Icon(Icons.navigate_next, color: Colors.white),
+                    ],
                   ),
                 ),
               ],
             )
+
           ],
         ),
       ),
@@ -178,11 +253,21 @@ class TestResultPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: results.entries.map((entry) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+            return Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
               child: Text(
                 '${entry.key}: ${entry.value}',
                 style: const TextStyle(fontSize: 18),

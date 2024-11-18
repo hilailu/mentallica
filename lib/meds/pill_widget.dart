@@ -31,8 +31,7 @@ class _NextPillWidgetState extends State<NextPillWidget> {
         .where('endDate', isGreaterThan: Timestamp.fromDate(now))
         .get();
 
-    List<Map<String, dynamic>> medications = querySnapshot.docs
-        .map((doc) {
+    List<Map<String, dynamic>> medications = querySnapshot.docs.map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id;
       return data;
@@ -40,11 +39,11 @@ class _NextPillWidgetState extends State<NextPillWidget> {
 
     if (medications.isEmpty) return;
 
-    DateTime? nextDoseDate;
-    String? nextTime;
+    DateTime? closestDoseDateTime;
     String? nextName;
     String? nextDose;
     String? nextMeasurement;
+    String? nextTime;
 
     for (var medication in medications) {
       List<String> daysTaken = List<String>.from(medication['daysTaken']);
@@ -54,40 +53,40 @@ class _NextPillWidgetState extends State<NextPillWidget> {
       String measurement = medication['measurement'];
       String medicationId = medication['id'];
 
-      DateTime nextDateForMed = _getNextDoseDate(daysTaken, now);
-      String nextScheduleTime = _getNextTime(schedules, now);
+      DateTime? nextDoseDateTime = _getNextDoseDateTime(daysTaken, schedules, now);
 
-      DateTime nextFullDoseDateTime = DateFormat('h:mm a').parse(nextScheduleTime);
-      DateTime fullNextDoseDate = DateTime(
-          nextDateForMed.year, nextDateForMed.month, nextDateForMed.day,
-          nextFullDoseDateTime.hour, nextFullDoseDateTime.minute
-      );
-
-      if (fullNextDoseDate.isAfter(now) && fullNextDoseDate.isBefore(nextDoseDate ?? DateTime(3000))) {
+      if (nextDoseDateTime != null &&
+          (closestDoseDateTime == null || nextDoseDateTime.isBefore(closestDoseDateTime!))) {
         setState(() {
           _medicationId = medicationId;
-          nextDoseDate = fullNextDoseDate;
-          nextTime = nextScheduleTime;
+          closestDoseDateTime = nextDoseDateTime;
           nextName = name;
           nextDose = dose;
           nextMeasurement = measurement;
+          nextTime = DateFormat('h:mm a').format(nextDoseDateTime);
         });
       }
     }
 
-    if (nextDoseDate != null) {
-      String formattedDate = DateFormat('HH:mm').format(nextDoseDate!);
-      String dayInfo = nextDoseDate!.difference(now).inDays == 0 ? 'Today' : 'in ${nextDoseDate!.difference(now).inDays} days';
+    if (closestDoseDateTime != null) {
+      String dayInfo;
+      if (now.year == closestDoseDateTime!.year && now.month == closestDoseDateTime!.month && now.day == closestDoseDateTime!.day) {
+        dayInfo = 'Today';
+      } else {
+        int daysDifference = closestDoseDateTime!.difference(now).inDays;
+        dayInfo = 'in ${daysDifference + 1} day(s)';
+      }
 
       setState(() {
         nextDoseInfo = dayInfo;
-        nextDoseTime = nextTime ?? formattedDate;
+        nextDoseTime = nextTime ?? dayInfo;
         nextDoseDetails = '$nextName, $nextDose $nextMeasurement';
       });
     }
   }
 
-  DateTime _getNextDoseDate(List<String> daysTaken, DateTime now) {
+  DateTime? _getNextDoseDateTime(List<String> daysTaken, List<String> schedules, DateTime now) {
+    // Convert daysTaken to weekdays
     List<int> daysOfWeek = daysTaken.map((day) {
       switch (day) {
         case 'Mon':
@@ -109,31 +108,33 @@ class _NextPillWidgetState extends State<NextPillWidget> {
       }
     }).toList();
 
+    DateTime? closestDateTime;
+
+    // Iterate over the next 7 days to find the nearest dose
     for (int i = 0; i < 7; i++) {
-      DateTime nextDay = now.add(Duration(days: i));
-      if (daysOfWeek.contains(nextDay.weekday)) {
-        return nextDay;
+      DateTime date = now.add(Duration(days: i));
+
+      if (daysOfWeek.contains(date.weekday)) {
+        for (String schedule in schedules) {
+          DateTime scheduleTime = DateFormat('h:mm a').parse(schedule);
+          DateTime fullDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            scheduleTime.hour,
+            scheduleTime.minute,
+          );
+
+          if (fullDateTime.isAfter(now) &&
+              (closestDateTime == null || fullDateTime.isBefore(closestDateTime))) {
+            closestDateTime = fullDateTime;
+          }
+        }
       }
     }
-    return now;
+
+    return closestDateTime;
   }
-
-  String _getNextTime(List<String> schedules, DateTime now) {
-    schedules.sort((a, b) => a.compareTo(b));
-
-    DateTime today = DateTime(now.year, now.month, now.day);
-    for (String time in schedules) {
-      DateTime scheduleTime = DateFormat('h:mm a').parse(time);
-      DateTime fullScheduleTime = DateTime(today.year, today.month, today.day, scheduleTime.hour, scheduleTime.minute);
-
-      if (fullScheduleTime.isAfter(now)) {
-        return time;
-      }
-    }
-
-    return schedules.first;
-  }
-
 
   @override
   Widget build(BuildContext context) {

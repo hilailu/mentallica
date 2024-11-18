@@ -22,6 +22,7 @@ class ArticleTile extends StatelessWidget {
     return InkWell(
       onTap: () => _navigateToArticleDetail(context),
       child: Card(
+        color: Colors.white,
         margin: const EdgeInsets.symmetric(vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         shadowColor: Colors.grey.withOpacity(0.2),

@@ -100,7 +100,11 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mood Journal'),
+        title: const Text(
+          "Mood Journal",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
         children: [
@@ -169,7 +173,7 @@ class _CalendarPageState extends State<CalendarPage> {
               'Scheduled Appointments',
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -178,27 +182,35 @@ class _CalendarPageState extends State<CalendarPage> {
           Expanded(
             child: _futureAppointments.isNotEmpty
                 ? ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               itemCount: _futureAppointments.length,
               itemBuilder: (context, index) {
                 final appointment = _futureAppointments[index];
                 return Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  margin: const EdgeInsets.all(6.0),
-                  child: Container(
+                  child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           '${_formatDate(appointment['date'])}, ${appointment['timeSlot']}',
-                          style: const TextStyle(fontSize: 16,),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           appointment['contactName'],
-                          style: const TextStyle(fontSize: 16,),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
                         ),
                       ],
                     ),

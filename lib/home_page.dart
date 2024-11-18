@@ -11,10 +11,8 @@ import 'package:mentallica/schedule/appointment_list.dart';
 import 'package:mentallica/schedule/appointment_widget.dart';
 import 'package:mentallica/schedule/schedule_page.dart';
 import 'package:mentallica/journal/statistics_page.dart';
-import 'package:mentallica/tests/autism/aqtest.dart';
-import 'package:mentallica/tests/autism/catqtest.dart';
-import 'package:mentallica/tests/autism/rbq2atest.dart';
-import 'package:mentallica/tests/depression/phq9.dart';
+import 'package:mentallica/tests/test_configs.dart';
+import 'package:mentallica/tests/test_page.dart';
 import 'package:mentallica/tests/tests_page.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -34,12 +32,6 @@ class _HomePageState extends State<HomePage> {
   String? role = 'Patient';
   String? name = 'User';
   List<MedicationWiki> _medicationsWiki = [];
-
-  final List<Widget> testPages = [
-    CATQTestPage(),
-    RBQ2ATestPage(),
-    AQTestPage(),
-  ];
 
   @override
   void initState() {
@@ -233,11 +225,13 @@ class _HomePageState extends State<HomePage> {
                                   const SizedBox(height: 4),
                                   InkWell(
                                     onTap: () {
+                                      DateTime now = DateTime.now();
+                                      DateTime midnightUTC = DateTime.utc(now.year, now.month, now.day);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  JournalEntryPage(date: DateTime.now())));
+                                                  JournalEntryPage(date: midnightUTC)));
                                     },
                                     child: const SizedBox(
                                       width: 120,
@@ -293,10 +287,21 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          final randomIndex = Random().nextInt(testPages.length);
+                          final keys = testConfigurations.keys.toList();
+                          final randomIndex = Random().nextInt(keys.length);
+                          final randomKey = keys[randomIndex];
+                          final config = testConfigurations[randomKey]!;
+
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => testPages[randomIndex]),
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return TestPage(
+                                  testName: config.testName,
+                                  calculateResults: config.calculateResults,
+                                );
+                              },
+                            ),
                           );
                         },
                         child: Row(
@@ -395,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                       '1 min',
                       'assets/images/depression.png',
                       'Based on the Beck Depression Inventory, which measures depression symptoms.',
-                      PHQ9TestPage(),
+                      'PHQ9'
                     ),
                     const SizedBox(height: 12),
                     _buildFeaturedTest(
@@ -403,7 +408,7 @@ class _HomePageState extends State<HomePage> {
                       '3 min',
                       'assets/images/autism.png',
                       'Measuring Autism Spectrum Disorders across 10 different scales.',
-                      CATQTestPage(),
+                      'CATQ',
                     ),
                     const SizedBox(height: 20),
                   ],
@@ -417,13 +422,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildFeaturedTest(String title, String duration, String imagePath,
-      String description, Widget testPage) {
+      String description, String test) {
     return InkWell(
       onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => testPage),
-        );
+            context,
+            MaterialPageRoute(
+            builder: (context) {
+          final config = testConfigurations[test]!;
+          return TestPage(
+            testName: config.testName,
+            calculateResults: config.calculateResults,
+          );
+        },
+        ),);
       },
       child: Container(
         padding: const EdgeInsets.all(16),

@@ -209,7 +209,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8BACA5),
                 ),
-                child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
+                child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate), style: const TextStyle(color: Colors.white),),
               ),
             ),
             const SizedBox(height: 16),
@@ -259,7 +259,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   backgroundColor: const Color(0xFF8BACA5),
                   disabledBackgroundColor: const Color(0xFFc8cfcd),
                 ),
-                child: const Text('Book Appointment'),
+                child: const Text('Book Appointment', style: TextStyle(color: Colors.white),),
               ),
             ),
           ],

@@ -1,47 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'autism/aqtest.dart';
-import 'autism/catqtest.dart';
-import 'autism/rbq2atest.dart';
-import 'depression/phq9.dart';
-
-class TestCategory extends StatefulWidget {
-  final String category;
-  final List<Map<String, dynamic>> tests;
-
-  const TestCategory({super.key, required this.category, required this.tests});
-
-  @override
-  _TestCategoryState createState() => _TestCategoryState();
-}
-
-class _TestCategoryState extends State<TestCategory> {
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(widget.category, style: const TextStyle(fontSize: 18)),
-      initiallyExpanded: _isExpanded,
-      onExpansionChanged: (expanded) {
-        setState(() {
-          _isExpanded = expanded;
-        });
-      },
-      children: widget.tests.map((test) {
-        return ListTile(
-          title: Text(test['name']),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => test['page']),
-            );
-          },
-        );
-      }).toList(),
-    );
-  }
-}
+import 'package:mentallica/tests/test_configs.dart';
+import 'package:mentallica/tests/test_page.dart';
 
 class TestsPage extends StatelessWidget {
   const TestsPage({super.key});
@@ -49,31 +8,76 @@ class TestsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mental Health Tests')),
-      body: ListView(
-        children: const [
-          TestCategory(
-            category: 'Autism',
-            tests: [
-              {'name': 'CAT-Q Test', 'page': CATQTestPage()},
-              {'name': 'RBQ-2A Test', 'page': RBQ2ATestPage()},
-              {'name': 'AQ Test', 'page': AQTestPage()},
-            ],
-          ),
-          TestCategory(
-            category: 'Depression',
-            tests: [
-              {'name': 'PHQ-9 Test', 'page': PHQ9TestPage()},
-            ],
-          ),
-          TestCategory(
-            category: 'Anxiety',
-            tests: [
-              {'name': 'GAD-7 Test', 'page': CATQTestPage()},
-            ],
-          ),
-        ],
+      appBar: AppBar(
+        title: const Text(
+          'Tests',
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: _groupTestsByCategory().entries.map((entry) {
+            final category = entry.key;
+            final tests = entry.value;
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF5F6),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ExpansionTile(
+                initiallyExpanded: false,
+                title: Text(
+                  category,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
+                ),
+                children: tests.map((testKey) {
+                  return ListTile(
+                    title: Text(testKey.toUpperCase()),
+                    onTap: () {
+                      final config = testConfigurations[testKey]!;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestPage(
+                            testName: config.testName,
+                            calculateResults: config.calculateResults,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
+  }
+
+  Map<String, List<String>> _groupTestsByCategory() {
+    final Map<String, List<String>> groupedTests = {};
+    testConfigurations.forEach((testKey, config) {
+      final category = config.category;
+      if (!groupedTests.containsKey(category)) {
+        groupedTests[category] = [];
+      }
+      groupedTests[category]!.add(testKey);
+    });
+    return groupedTests;
   }
 }

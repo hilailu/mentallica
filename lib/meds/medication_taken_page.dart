@@ -35,12 +35,17 @@ class _MedicationTrackingPageState extends State<MedicationTrackingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.name),
+      appBar: AppBar(
+        title: Text(
+          widget.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        body: ListView(
-          children: _buildTrackingList(),
-        )
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: _buildTrackingList(),
+      ),
     );
   }
 
@@ -55,33 +60,104 @@ class _MedicationTrackingPageState extends State<MedicationTrackingPage> {
       String weekDay = DateFormat('EEE').format(date);
 
       if (widget.daysTaken.contains(weekDay)) {
-        trackingItems.add(ListTile(
-          title: Text(formattedDate),
-          subtitle: Column(
-            children: widget.schedules.map((schedule) {
-              return CheckboxListTile(
-                title: Text(schedule),
-                value: updatedWasTaken[formattedDate]?[schedule] ?? false,
-                onChanged: (bool? newValue) {
-                  setState(() {
-                    updatedWasTaken[formattedDate] ??= {};
-                    updatedWasTaken[formattedDate]![schedule] = newValue ?? false;
-                    _saveTracking();
-                  });
-                },
-              );
-            }).toList(),
+        trackingItems.add(
+          _buildTrackingCard(
+            formattedDate: formattedDate,
+            schedules: widget.schedules,
           ),
-        ));
+        );
       } else {
-        trackingItems.add(ListTile(
-          title: Text(formattedDate),
-          subtitle: const Text('No meds for this day'),
-        ));
+        trackingItems.add(
+          _buildNoMedsCard(formattedDate),
+        );
       }
     }
 
-    return trackingItems.toList();
+    return trackingItems;
+  }
+
+  Widget _buildTrackingCard({
+    required String formattedDate,
+    required List<String> schedules,
+  }) {
+    return Card(
+      elevation: 4.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              formattedDate,
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Column(
+              children: schedules.map((schedule) {
+                return CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    schedule,
+                    style: const TextStyle(fontSize: 14.0),
+                  ),
+                  value: updatedWasTaken[formattedDate]?[schedule] ?? false,
+                  onChanged: (bool? newValue) {
+                    setState(() {
+                      updatedWasTaken[formattedDate] ??= {};
+                      updatedWasTaken[formattedDate]![schedule] = newValue ?? false;
+                      _saveTracking();
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoMedsCard(String formattedDate) {
+    return Card(
+      color: Colors.grey.shade100,
+      elevation: 4.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              formattedDate,
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            const Text(
+              'No meds for this day',
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   List<DateTime> _generateDates(DateTime start) {

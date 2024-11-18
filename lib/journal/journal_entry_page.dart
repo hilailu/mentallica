@@ -15,7 +15,7 @@ class JournalEntryPage extends StatefulWidget {
 
 class _JournalEntryPageState extends State<JournalEntryPage> {
   final List<String> _moods = ['Happy', 'Excited', 'Neutral', 'Sad', 'Angry'];
-  final List<String> _symptoms = ['Anxiety', 'Irritability', 'Depression', 'Insomnia', 'Dissociation', 'Anger', 'Suicidal thoughts'];
+  final List<String> _symptoms = ['Anxiety', 'Irritability', 'Anger', 'Depression', 'Suicidal thoughts', 'Insomnia', 'Dissociation'];
   final List<String> _positives = ['Family', 'Romance', 'Friendship', 'Exercise', 'Relaxation', 'Games', 'Pets', 'Travel'];
 
   String _selectedMood = 'Happy';
@@ -84,130 +84,221 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
   Widget build(BuildContext context) {
     final DateFormat formatter = DateFormat("d MMM ''yy");
     String formattedDate = formatter.format(widget.date);
+
     return Scaffold(
-        appBar: AppBar(title: Text(formattedDate)),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: LayoutBuilder(
-              builder: (context, constraints) {
-                return ListView(
-                  children: [
-                    Text('Mood', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 6),
-                    Wrap(
-                      spacing: 4.0,
-                      alignment: WrapAlignment.spaceBetween,
-                      children: _moods.map((mood) {
-                        return SizedBox(
-                          width: 72,
-                          height: 70,
-                          child: ChoiceChip(
-                            side: BorderSide.none,
-                            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                            showCheckmark: false,
-                            label: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const SizedBox(height: 6),
-                                Image.asset('assets/images/$mood.png', height: 36),
-                                Text(mood, style: const TextStyle(fontSize: 12),),
-                                const SizedBox(height: 6),
-                              ],
+      appBar: AppBar(
+        title: Text(
+          formattedDate,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            _buildSectionContainer(
+              context,
+              title: 'Mood',
+              child: Wrap(
+                spacing: 4.0,
+                runSpacing: 12.0,
+                children: _moods.map((mood) {
+                  return SizedBox(
+                    width: 66,
+                    child: ChoiceChip(
+                      side: BorderSide.none,
+                      showCheckmark: false,
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      label: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 4),
+                          Image.asset('assets/images/$mood.png', height: 40),
+                          const SizedBox(height: 4),
+                          Text(
+                            mood,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _selectedMood == mood
+                                  ? Colors.white
+                                  : Colors.black87,
                             ),
-                            selected: _selectedMood == mood,
-                            selectedColor: const Color(0xFF8BACA5),
-                            onSelected: (selected) {
-                              setState(() {
-                                _selectedMood = mood;
-                              });
-                            },
                           ),
-                        );
-                      }).toList(),
+                        ],
+                      ),
+                      selected: _selectedMood == mood,
+                      selectedColor: const Color(0xFF8BACA5),
+                      onSelected: (selected) {
+                        setState(() {
+                          _selectedMood = mood;
+                        });
+                      },
                     ),
-                    const SizedBox(height: 20),
-                    Text('Symptoms', style: Theme.of(context).textTheme.titleMedium),
-                    Wrap(
-                      spacing: 8.0,
-                      children: _symptoms.map((symptom) {
-                        bool selected = _selectedSymptoms.contains(symptom);
-                        return ChoiceChip(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Adjust padding if needed
-                          showCheckmark: false,
-                          selectedColor: const Color(0xFF8BACA5),
-                          label: Text(
-                            symptom,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                          selected: selected,
-                          onSelected: (selected) {
-                            setState(() {
-                              if (selected) {
-                                _selectedSymptoms.add(symptom);
-                              } else {
-                                _selectedSymptoms.remove(symptom);
-                              }
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    Text('Positive moments', style: Theme.of(context).textTheme.titleMedium),
-                    Wrap(
-                      spacing: 8.0,
-                      children: _positives.map((positive) {
-                        bool selected = _selectedPositives.contains(positive);
-                        return ChoiceChip(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Adjust padding if needed
-                          showCheckmark: false,
-                          selectedColor: const Color(0xFF8BACA5),
-                          label: Text(
-                            positive,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                          selected: selected,
-                          onSelected: (selected) {
-                            setState(() {
-                              if (selected) {
-                                _selectedPositives.add(positive);
-                              } else {
-                                _selectedPositives.remove(positive);
-                              }
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    Text('Describe your day', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 6),
-                    TextField(
-                      controller: _descriptionController,
-                      maxLines: 10,
-                      decoration: const InputDecoration(
-                        hintText: 'Write about your day...',
-                        border: OutlineInputBorder(),
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildSectionContainer(
+              context,
+              title: 'Symptoms',
+              child: Wrap(
+                spacing: 8.0,
+                children: _symptoms.map((symptom) {
+                  final isSelected = _selectedSymptoms.contains(symptom);
+                  return ChoiceChip(
+                    showCheckmark: false,
+                    label: Text(
+                      symptom,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isSelected ? Colors.white : Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(foregroundColor: Colors.red),
-                          onPressed: () { _removeEntry(date: widget.date); },
-                          child: const Text('Delete'),
-                        ),
-                        ElevatedButton(
-                          onPressed: _saveEntry,
-                          child: const Text('Save'),
-                        ),
-                      ],
-                    )
-                  ],
-                );
-              }),
-        ));
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    selected: isSelected,
+                    selectedColor: const Color(0xFF8BACA5),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedSymptoms.add(symptom);
+                        } else {
+                          _selectedSymptoms.remove(symptom);
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildSectionContainer(
+              context,
+              title: 'Positive Moments',
+              child: Wrap(
+                spacing: 8.0,
+                children: _positives.map((positive) {
+                  final isSelected = _selectedPositives.contains(positive);
+                  return ChoiceChip(
+                    showCheckmark: false,
+                    label: Text(
+                      positive,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isSelected ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    selected: isSelected,
+                    selectedColor: const Color(0xFF8BACA5),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedPositives.add(positive);
+                        } else {
+                          _selectedPositives.remove(positive);
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildSectionContainer(
+              context,
+              title: 'Describe your day',
+              child: TextField(
+                controller: _descriptionController,
+                maxLines: 8,
+                decoration: InputDecoration(
+                  hintText: 'Write about your day...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[50],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => _removeEntry(date: widget.date),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  icon: const Icon(Icons.delete, color: Colors.white),
+                  label: const Text("Delete"),
+                ),
+
+                ElevatedButton.icon(
+                  onPressed: _saveEntry,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme
+                        .of(context)
+                        .primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  icon: const Icon(Icons.save, color: Colors.white),
+                  label: const Text("Save"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionContainer(BuildContext context,
+      {required String title, required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 10),
+          child,
+        ],
+      ),
+    );
   }
 }

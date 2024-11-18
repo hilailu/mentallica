@@ -97,8 +97,9 @@ class _ContactsPageState extends State<ContactsPage> {
         appBar: AppBar(title: const Text(
           'Contacts',
           style: TextStyle(fontWeight: FontWeight.bold),
-        ),),
-        backgroundColor: const Color(0xFF8BACA5),
+        ),
+          backgroundColor: const Color(0xFF8BACA5),
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }

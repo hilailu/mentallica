@@ -109,11 +109,11 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton.icon(
               onPressed: _deleteProfile,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.redAccent,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               icon: const Icon(Icons.delete, color: Colors.white),
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               icon: const Icon(Icons.save, color: Colors.white),
@@ -142,11 +142,11 @@ class _HomePageState extends State<HomePage> {
     return ElevatedButton.icon(
       onPressed: signOut,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.redAccent,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(30),
         ),
       ),
       icon: const Icon(Icons.logout, color: Colors.white),
@@ -162,7 +162,6 @@ class _HomePageState extends State<HomePage> {
           "Profile Page",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Center(

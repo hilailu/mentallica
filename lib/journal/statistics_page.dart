@@ -22,18 +22,14 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     _fetchJournalEntries(_selectedTimePeriod);
 
     _tabController.addListener(() {
-      switch (_tabController.index) {
-        case 0:
-          setState(() => _selectedTimePeriod = 'week');
-          break;
-        case 1:
-          setState(() => _selectedTimePeriod = 'month');
-          break;
-        case 2:
-          setState(() => _selectedTimePeriod = 'year');
-          break;
+      final newTimePeriod = ['week', 'month', 'year'][_tabController.index];
+      if (_selectedTimePeriod != newTimePeriod) {
+        setState(() {
+          _selectedTimePeriod = newTimePeriod;
+          _isLoading = true;
+        });
+        _fetchJournalEntries(newTimePeriod);
       }
-      _fetchJournalEntries(_selectedTimePeriod);
     });
   }
 
@@ -44,10 +40,6 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
   }
 
   Future<void> _fetchJournalEntries(String timePeriod) async {
-    setState(() {
-      _isLoading = true;
-    });
-
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('journal_entries')
         .where('patientId', isEqualTo: Auth().userId)
@@ -95,7 +87,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
   Widget _buildMoodChart(Map<String, int> moodFrequency) {
     final List<Color> barColors = [
       const Color(0xFF8BACA5), const Color(0xFF78C0D6),
-      const Color(0xFFE29E85), const Color(0xFFEEC27F),
+      const Color(0xFFEEC27F), const Color(0xFFE29E85),
       const Color(0xFF746A6A)
     ];
 
@@ -118,7 +110,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
       child: BarChart(
         BarChartData(
           barGroups: barGroups,
-          gridData: FlGridData(show: false),
+          gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
@@ -128,13 +120,15 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                 getTitlesWidget: (double value, TitleMeta meta) {
                   return Text(
                     value.toInt().toString(),
-                    style: TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 14, color: Colors.black),
                   );
                 },
               ),
             ),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false)),
+            topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false)),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -147,7 +141,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(height: 5,),
+                      const SizedBox(height: 5,),
                       Image.asset(
                         'assets/images/$mood.png',
                         height: 20,
@@ -155,7 +149,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                       ),
                       Text(
                         mood,
-                        style: TextStyle(fontSize: 12, color: Colors.black),
+                        style: const TextStyle(fontSize: 13, color: Colors
+                            .black),
                       ),
                     ],
                   );
@@ -214,7 +209,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
       child: BarChart(
         BarChartData(
           barGroups: barGroups,
-          gridData: FlGridData(show: false),
+          gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
@@ -223,13 +218,15 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                 getTitlesWidget: (double value, TitleMeta meta) {
                   return Text(
                     value.toInt().toString(),
-                    style: TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 14, color: Colors.black),
                   );
                 },
               ),
             ),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false)),
+            topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false)),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -242,7 +239,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(height: 5,),
+                      const SizedBox(height: 5,),
                       Image.asset(
                         'assets/images/$mood.png',
                         height: 20,
@@ -250,7 +247,8 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                       ),
                       Text(
                         mood,
-                        style: TextStyle(fontSize: 12, color: Colors.black),
+                        style: const TextStyle(fontSize: 13, color: Colors
+                            .black),
                       ),
                     ],
                   );
@@ -269,6 +267,34 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     );
   }
 
+  Widget _buildChartCard(String title, Widget chart) {
+    return Card(
+      color: Colors.white,
+      elevation: 5,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(height: 274, child: chart),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Map<String, int> moodFrequency = _getMoodFrequency(_entries);
@@ -276,24 +302,36 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
         _entries);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Statistics')),
+      appBar: AppBar(
+        title: const Text(
+            'Statistics', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: const Color(0xFF8BACA5),
+      ),
       body: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: 'Week'),
-              Tab(text: 'Month'),
-              Tab(text: 'Year'),
-            ],
+          Material(
+              elevation: 4,
+              child: ColoredTabBar(const Color(0xFF8BACA5), TabBar(
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white),
+                indicatorColor: Colors.white,
+                controller: _tabController,
+                tabs: const [
+                  Tab(text: 'Week'),
+                  Tab(text: 'Month'),
+                  Tab(text: 'Year'),
+                ],
+              ))
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0, vertical: 10),
               child: _isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : _entries.isEmpty
-                  ? Center(
+                  ? const Center(
                 child: Text(
                   'Not enough data to generate the chart.',
                   style: TextStyle(fontSize: 16, color: Colors.grey),
@@ -301,36 +339,10 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
               )
                   : ListView(
                 children: [
-                  SizedBox(height: 20),
-                  Center(
-                    child: Text(
-                      'Mood Frequency',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 300,
-                    child: _buildMoodChart(moodFrequency),
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: Text(
-                      'Mood Correlation (Positives & Symptoms)',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 300,
-                    child: _buildCorrelationChart(correlationData),
-                  ),
+                  _buildChartCard(
+                      'Mood Frequency', _buildMoodChart(moodFrequency)),
+                  _buildChartCard('Mood Correlation (Positives & Symptoms)',
+                      _buildCorrelationChart(correlationData)),
                 ],
               ),
             ),
@@ -340,3 +352,20 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     );
   }
 }
+
+class ColoredTabBar extends Container implements PreferredSizeWidget {
+  ColoredTabBar(this.color, this.tabBar, {super.key});
+
+  final Color color;
+  final TabBar tabBar;
+
+  @override
+  Size get preferredSize => tabBar.preferredSize;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    color: color,
+    child: tabBar,
+  );
+}
+
