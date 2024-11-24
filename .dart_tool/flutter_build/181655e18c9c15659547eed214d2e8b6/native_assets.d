@@ -1,0 +1,1 @@
+ D:\\Projects\\flutter\\mentallica\\.dart_tool\\flutter_build\\181655e18c9c15659547eed214d2e8b6\\native_assets.yaml: 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mentallica/tests/test_configs.dart';
 
 class TestPage extends StatefulWidget {
   final String testName;
@@ -87,7 +88,7 @@ class _TestPageState extends State<TestPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TestResultPage(results: results),
+        builder: (context) => TestResultPage(results: results, config: testConfigurations[widget.testName],),
       ),
     );
   }
@@ -238,42 +239,69 @@ class _TestPageState extends State<TestPage> {
 
 class TestResultPage extends StatelessWidget {
   final Map<String, int> results;
+  final TestConfig? config;
 
   const TestResultPage({
     super.key,
     required this.results,
+    required this.config,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Results'),
+        title: Text(
+          config!.testName.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: results.entries.map((entry) {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ...results.entries.map((entry) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF5F6),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      entry.key,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      entry.value.toString(),
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+            const SizedBox(height: 20),
+            Text(
+              config!.description,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               ),
-              child: Text(
-                '${entry.key}: ${entry.value}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            );
-          }).toList(),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

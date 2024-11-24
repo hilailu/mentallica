@@ -83,14 +83,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: SvgPicture.asset('assets/images/logo.svg', height: 40),
-        actions: [
-          IconButton(
-              icon: PhosphorIcon(PhosphorIcons.bell(), size: 28),
-              onPressed: () {}),
-          IconButton(
-              icon: PhosphorIcon(PhosphorIcons.slidersHorizontal(), size: 28),
-              onPressed: () {}),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -500,13 +492,6 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         title: SvgPicture.asset(
             'assets/images/logo.svg', height: 40),
-        actions: [
-          IconButton(icon: PhosphorIcon(PhosphorIcons.bell(), size: 28,),
-              onPressed: () {}),
-          IconButton(
-              icon: PhosphorIcon(PhosphorIcons.slidersHorizontal(), size: 28,),
-              onPressed: () {}),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(

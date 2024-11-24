@@ -2,11 +2,13 @@ class TestConfig {
   final Map<String, int> Function(Map<int, int>) calculateResults;
   final String testName;
   final String category;
+  final String description;
 
   TestConfig({
     required this.calculateResults,
     required this.testName,
     required this.category,
+    required this.description,
   });
 }
 
@@ -15,6 +17,7 @@ final Map<String, TestConfig> testConfigurations = {
   'PHQ9': TestConfig(
     testName: 'PHQ9',
     category: 'Depression',
+    description: '',
     calculateResults: (answers) {
       int totalScore = 0;
       answers.forEach((_, score) {
@@ -29,6 +32,7 @@ final Map<String, TestConfig> testConfigurations = {
   'rbq2a': TestConfig(
     testName: 'rbq2a',
     category: 'Autism',
+    description: '',
     calculateResults: (answers) {
       int totalScore = 0;
       answers.forEach((questionIndex, score) {
@@ -42,6 +46,7 @@ final Map<String, TestConfig> testConfigurations = {
   'catq': TestConfig(
     testName: 'catq',
     category: 'Autism',
+    description: 'A total score of 100 or above indicates you camouflage autistic traits. High CAT-Q scores correlate with social anxiety in both autistics and neurotypicals, with the exception of Masking. In autistic people, the total CAT-Q score and the Assimilation score negatively correlate with well-being. The higher your scores on these measures, the lower your well-being tends to be. In neurotypical people, all CAT-Q scores negatively correlate with well-being—not just total score and Assimilation. In autistic people, all CAT-Q scores were correlated with depression and generalised anxiety. This wasn’t tested for in the neurotypical group.',
     calculateResults: (answers) {
       final List<int> reverseScoringQuestions = [2, 11, 18, 21, 23];
       final List<int> compensationQuestions = [0, 3, 4, 7, 10, 13, 16, 19, 22];
@@ -78,6 +83,7 @@ final Map<String, TestConfig> testConfigurations = {
   'aq': TestConfig(
     testName: 'aq',
     category: 'Autism',
+    description: '',
     calculateResults: (answers) {
       final List<int> reverseScoringQuestions = [
         1, 3, 8, 10, 11, 14, 15, 17, 24, 25, 27, 28, 29, 30, 31, 32, 34, 36, 37,
