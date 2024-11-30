@@ -40,7 +40,7 @@ class ArticleTile extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                DateFormat.yMMMMd().format(article.date.toDate()),
+                DateFormat.yMMMMd('ru_RU').format(article.date.toDate()),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.grey,
                 ),

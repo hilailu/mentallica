@@ -101,7 +101,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Mood Journal",
+          "Дневник настроения",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).primaryColor,
@@ -123,7 +123,7 @@ class _CalendarPageState extends State<CalendarPage> {
               if (selectedDay.isAfter(DateTime.now())) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      content: Text('Cannot create a note for future days!')),
+                      content: Text('Нельзя создать запись на будущее!')),
                 );
               } else {
                 setState(() {
@@ -170,7 +170,7 @@ class _CalendarPageState extends State<CalendarPage> {
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
-              'Scheduled Appointments',
+              'Ближайшие записи к врачу',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -221,7 +221,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 : const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                'No upcoming appointments',
+                'Записей на будущее нет',
                 style: TextStyle(fontSize: 16),
               ),
             ),

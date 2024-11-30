@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           if (mounted) {
             setState(() {
-              errorMessage = "Document doesn't exist";
+              errorMessage = "Документ не существует";
               _isProcessing = false;
             });
           }
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
     await ref.doc(user!.uid).set({
       'email': _controllerEmail.text,
       'role': role,
-      'name': 'User'
+      'name': 'Пользователь'
     });
 
     if (mounted) {
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       child: Text(
-        isLogin ? "Login" : "Register",
+        isLogin ? "Войти" : "Зарегистрироваться",
         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
@@ -194,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       },
       child: Text(
-        isLogin ? "Register instead" : "Login instead",
+        isLogin ? "Зарегистрироваться" : "Войти",
         style: const TextStyle(
           fontSize: 14,
           color: Color(0xFF8BACA5),
@@ -213,8 +213,8 @@ class _LoginPageState extends State<LoginPage> {
           Flexible(
             child: ListTile(
               title: const Text(
-                'Patient',
-                style: TextStyle(fontSize: 20, color: Colors.black),
+                'Пациент',
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               leading: Radio<String>(
                 value: 'Patient',
@@ -231,8 +231,8 @@ class _LoginPageState extends State<LoginPage> {
           Flexible(
             child: ListTile(
               title: const Text(
-                'Doctor',
-                style: TextStyle(fontSize: 20, color: Colors.black),
+                'Доктор',
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               leading: Radio<String>(
                 value: 'Doctor',
@@ -256,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isLogin ? "Login" : "Register",
+          isLogin ? "Вход" : "Регистрация",
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -280,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  isLogin ? "Login" : "Register",
+                  isLogin ? "Вход" : "Регистрация",
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -289,8 +289,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 _roleSelection(),
-                _entryField("Email", _controllerEmail),
-                _entryField("Password", _controllerPassword, isPassword: true),
+                _entryField("Почта", _controllerEmail),
+                _entryField("Пароль", _controllerPassword, isPassword: true),
                 _errorMessage(),
                 const SizedBox(height: 10),
                 _submitButton(),

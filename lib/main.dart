@@ -5,12 +5,14 @@ import 'package:mentallica/notifs/FirebaseApi.dart';
 import 'contacts/contacts_page.dart';
 import 'firebase_options.dart';
 
+import 'package:intl/date_symbol_data_local.dart';
 import 'auth/profile_page.dart';
 import 'home_page.dart';
 import 'journal/calendar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('ru_RU', null);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -34,6 +36,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AppMainPage(),
+      supportedLocales: const [
+        Locale('ru', 'RU'),
+        Locale('en', 'US'),
+      ],
     );
   }
 }
@@ -71,22 +77,22 @@ class _AppMainPageState extends State<AppMainPage> {
           BottomNavigationBarItem(
             backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Главная',
           ),
           BottomNavigationBarItem(
             backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.calendar_today),
-            label: 'Calendar',
+            label: 'Календарь',
           ),
           BottomNavigationBarItem(
             backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.map),
-            label: 'Doctors',
+            label: 'Контакты',
           ),
           BottomNavigationBarItem(
             backgroundColor: Color(0xFF8BACA5),
             icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            label: 'Профиль',
           ),
         ],
       ),

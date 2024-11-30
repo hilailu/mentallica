@@ -110,20 +110,20 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Future<void> _bookAppointment() async {
     if (_selectedSlot == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Please select a time slot")));
+          SnackBar(content: Text("Пожалуйста, выберите время.")));
       return;
     }
 
     if (_doctorId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Doctor information not available")));
+          SnackBar(content: Text("Данные врача недоступны.")));
       return;
     }
 
     String patientId = Auth().userId;
     if (patientId == '') {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Please log in to book an appointment")));
+          SnackBar(content: Text("Пожалуйста, войдите в профиль перед записью.")));
       return;
     }
 
@@ -136,7 +136,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Appointment booked successfully")));
+        SnackBar(content: Text("Запись на прием создана успешно.")));
   }
 
   @override
@@ -144,7 +144,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Contact Details',
+          'Детали контакта',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -187,7 +187,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
             ),
             const SizedBox(height: 20),
-            Text('Select date', style: Theme.of(context).textTheme.bodyLarge),
+            Text('Выберите дату', style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
@@ -213,13 +213,13 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
             ),
             const SizedBox(height: 16),
-            Text('Available time slots', style: Theme.of(context).textTheme.bodyLarge),
+            Text('Доступное время', style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 8),
             if (_loadingSlots)
               const CircularProgressIndicator()
             else if (_availableSlots.isEmpty)
               const Text(
-                'No available time slots',
+                'Нет доступных слотов',
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               )
             else
@@ -259,7 +259,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   backgroundColor: const Color(0xFF8BACA5),
                   disabledBackgroundColor: const Color(0xFFc8cfcd),
                 ),
-                child: const Text('Book Appointment', style: TextStyle(color: Colors.white),),
+                child: const Text('Записаться на прием', style: TextStyle(color: Colors.white),),
               ),
             ),
           ],

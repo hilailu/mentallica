@@ -37,7 +37,7 @@ class ArticleDetailPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                DateFormat.yMMMMd().format(article.date.toDate()),
+                DateFormat.yMMMMd('ru_RU').format(article.date.toDate()),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.grey,
                 ),

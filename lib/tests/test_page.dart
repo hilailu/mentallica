@@ -4,7 +4,7 @@ import 'package:mentallica/tests/test_configs.dart';
 
 class TestPage extends StatefulWidget {
   final String testName;
-  final Map<String, int> Function(Map<int, int>) calculateResults;
+  final Map<String, dynamic> Function(Map<int, int>) calculateResults;
 
   const TestPage({
     super.key,
@@ -238,7 +238,7 @@ class _TestPageState extends State<TestPage> {
 }
 
 class TestResultPage extends StatelessWidget {
-  final Map<String, int> results;
+  final Map<String, dynamic> results;
   final TestConfig? config;
 
   const TestResultPage({
@@ -259,13 +259,14 @@ class TestResultPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ...results.entries.map((entry) {
-              return Container(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.symmetric(vertical: 8),
+                margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: const Color(0xFFEFF5F6),
                   borderRadius: BorderRadius.circular(12),
@@ -277,31 +278,74 @@ class TestResultPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      entry.key,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      entry.value.toString(),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  ],
+                child: Text(
+                  config!.description,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.justify,
+                  softWrap: true,
                 ),
-              );
-            }).toList(),
-            const SizedBox(height: 20),
-            Text(
-              config!.description,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              ...results.entries.where((entry) => entry.key != 'Result').map((entry) {
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF5F6),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        entry.key,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        entry.value.toString(),
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+              if (results.containsKey('Result'))
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF5F6),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    '${results['Result']}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.justify,
+                    softWrap: true,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

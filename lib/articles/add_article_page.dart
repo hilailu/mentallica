@@ -11,7 +11,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-  List<String> _availableTags = ['Depression', 'Anxiety', 'Panic Attack', 'Stress', 'Meditation', 'Tips'];
+  List<String> _availableTags = ['Депрессия', 'Тревога', 'Стресс', 'Панические атаки', 'Советы'];
   Set<String> _selectedTags = {};
 
   Future<void> _saveArticle() async {
@@ -26,7 +26,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields')),
+        const SnackBar(content: Text('Пожалуйста, заполните все поля')),
       );
     }
   }
@@ -35,7 +35,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Article', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text('Добавить статью', style: TextStyle(fontWeight: FontWeight.bold),),
         backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Padding(
@@ -57,11 +57,11 @@ class _AddArticlePageState extends State<AddArticlePage> {
             children: [
               TextField(
                 controller: _titleController,
-                decoration: _roundedInputDecoration('Title')
+                decoration: _roundedInputDecoration('Название')
               ),
               const SizedBox(height: 16),
               ListTile(
-                title: const Text('Date'),
+                title: const Text('Дата'),
                 subtitle: Text(
                     '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}'),
                 trailing: const Icon(Icons.calendar_today),
@@ -80,7 +80,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                 },
               ),
               const SizedBox(height: 10),
-              const Text(' Tags', style: TextStyle(
+              const Text(' Теги', style: TextStyle(
                 fontSize: 18.0,
                 color: Colors.black87,
               ),),
@@ -110,7 +110,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
               TextField(
                 controller: _contentController,
                 maxLines: 15,
-                decoration: _roundedInputDecoration('Article content...'),
+                decoration: _roundedInputDecoration('Текст статьи...'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -118,7 +118,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8BACA5),
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.white),),
+                child: const Text('Сохранить', style: TextStyle(color: Colors.white),),
               ),
             ],
           ),

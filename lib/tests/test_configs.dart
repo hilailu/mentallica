@@ -1,5 +1,5 @@
 class TestConfig {
-  final Map<String, int> Function(Map<int, int>) calculateResults;
+  final Map<String, dynamic> Function(Map<int, int>) calculateResults;
   final String testName;
   final String category;
   final String description;
@@ -59,7 +59,9 @@ final Map<String, TestConfig> testConfigurations = {
       int assimilationScore = 0;
 
       answers.forEach((questionIndex, score) {
-        int adjustedScore = reverseScoringQuestions.contains(questionIndex) ? 8 - score : score;
+        int adjustedScore = reverseScoringQuestions.contains(questionIndex)
+            ? 8 - score
+            : score;
 
         totalScore += adjustedScore;
         if (compensationQuestions.contains(questionIndex)) {
@@ -100,6 +102,41 @@ final Map<String, TestConfig> testConfigurations = {
       return {
         'Total score': totalScore,
       };
+    },
+  ),
+  // тревожность
+  "anxietyTest": TestConfig(
+    testName: 'anxietyTest',
+    category: 'Тревожность',
+    description: 'Тест помогает выявить симптомы тревожности. Чем выше ваш балл, тем выраженнее симптомы. Он не является диагностическим инструментом, но может быть полезен для понимания уровня тревожности.',
+    calculateResults: (answers) {
+      int totalScore = 0;
+
+      answers.forEach((questionIndex, score) {
+        totalScore += score;
+      });
+
+      if (totalScore <= 15) {
+        return {
+          'Результат:': totalScore,
+          'Result': 'У вас нет тревожных расстройств. Симптомы беспокойства незначительны.',
+        };
+      } else if (totalScore <= 30) {
+        return {
+          'Результат': totalScore,
+          'Result': 'Умеренные признаки тревожности. Вам может помочь изменение образа жизни или методики релаксации.',
+        };
+      } else if (totalScore <= 50) {
+        return {
+          'Результат': totalScore,
+          'Result': 'Выраженные симптомы тревожности. Рекомендуется проконсультироваться с профессионалом для более глубокой оценки.',
+        };
+      } else {
+        return {
+          'Результат': totalScore,
+          'Result': 'Серьезные признаки тревожности. Обратитесь к специалисту для диагностики и разработки плана лечения.',
+        };
+      }
     },
   ),
 };

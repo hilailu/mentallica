@@ -78,13 +78,13 @@ class _ContactsPageState extends State<ContactsPage> {
     if (_permissionDenied) {
       return Scaffold(
         appBar: AppBar(title: const Text(
-          'Contacts',
+          'Контакты',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),),
         backgroundColor: const Color(0xFF8BACA5),
         body: Center(
           child: Text(
-            'Please enable location services to use this feature.',
+            'Пожалуйста, разрешите использование геолокации для использования данной функции.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[700]),
             textAlign: TextAlign.center,
           ),
@@ -95,7 +95,7 @@ class _ContactsPageState extends State<ContactsPage> {
     if (_currentPosition == null) {
       return Scaffold(
         appBar: AppBar(title: const Text(
-          'Contacts',
+          'Контакты',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
           backgroundColor: const Color(0xFF8BACA5),
@@ -109,14 +109,14 @@ class _ContactsPageState extends State<ContactsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Contacts',
+          'Контакты',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5),
         actions: [
           IconButton(
             icon: Icon(_showMap ? Icons.list_alt : Icons.map, size: 28),
-            tooltip: _showMap ? 'Switch to List View' : 'Switch to Map View',
+            tooltip: _showMap ? 'Переключиться на список' : 'Переключиться на карту',
             onPressed: () {
               setState(() {
                 _showMap = !_showMap;
@@ -142,7 +142,7 @@ class _ContactsPageState extends State<ContactsPage> {
           title: Text(contact.name, style: Theme.of(context).textTheme.bodyLarge),
           subtitle: Text(contact.address),
           trailing: Chip(
-            label: Text('${distance.toStringAsFixed(2)} km', style: const TextStyle(fontSize: 14, color: Colors.white)),
+            label: Text('${distance.toStringAsFixed(2)} км', style: const TextStyle(fontSize: 14, color: Colors.white)),
             backgroundColor: const Color(0xFF8BACA5),
           ),
           onTap: () {

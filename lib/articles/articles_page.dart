@@ -90,7 +90,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Articles',
+          'Статьи',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -147,7 +147,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
               child: TextField(
                 onChanged: _searchArticles,
                 decoration: const InputDecoration(
-                  hintText: 'Search by article title...',
+                  hintText: 'Искать статью по названию...',
                   border: InputBorder.none,
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                   contentPadding: EdgeInsets.symmetric(vertical: 12),

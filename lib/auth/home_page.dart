@@ -45,11 +45,11 @@ class _HomePageState extends State<HomePage> {
       await user!.updateEmail(_emailController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully")),
+        const SnackBar(content: Text("Профиль успешно обновлен.")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error updating profile: $e")),
+        SnackBar(content: Text("Ошибка при обновлении профиля: $e")),
       );
     }
   }
@@ -63,11 +63,11 @@ class _HomePageState extends State<HomePage> {
       Navigator.pushReplacementNamed(context, '/login');
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile deleted successfully")),
+        const SnackBar(content: Text("Профиль успешно удален.")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error deleting profile: $e")),
+        SnackBar(content: Text("Ошибка при удалении профиля: $e")),
       );
     }
   }
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
         TextField(
           controller: _nameController,
           decoration: InputDecoration(
-            labelText: 'Name',
+            labelText: 'Имя',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
-            labelText: 'Email',
+            labelText: 'Почта',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               icon: const Icon(Icons.delete, color: Colors.white),
-              label: const Text("Delete Profile"),
+              label: const Text("Удалить профиль"),
             ),
             ElevatedButton.icon(
               onPressed: _updateUserDetails,
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               icon: const Icon(Icons.save, color: Colors.white),
-              label: const Text("Save Changes"),
+              label: const Text("Сохранить"),
             ),
           ],
         ),
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       icon: const Icon(Icons.logout, color: Colors.white),
-      label: const Text("Sign Out"),
+      label: const Text("Выйти"),
     );
   }
 
@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Profile Page",
+          "Профиль",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).primaryColor,
