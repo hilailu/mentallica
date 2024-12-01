@@ -107,7 +107,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
               return <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(
                   value: 'All',
-                  child: Text('All'),
+                  child: Text('Все'),
                 ),
                 ..._articles
                     .expand((article) => article.tags)

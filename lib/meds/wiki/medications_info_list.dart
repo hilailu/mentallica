@@ -78,7 +78,7 @@ class _MedicationsInfoPageState extends State<MedicationsInfoPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Medications',
+          'Лекарства',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -95,7 +95,7 @@ class _MedicationsInfoPageState extends State<MedicationsInfoPage> {
               return <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(
                   value: 'All',
-                  child: Text('All'),
+                  child: Text('Все'),
                 ),
                 ..._medications
                     .expand((article) => article.tags)
@@ -135,7 +135,7 @@ class _MedicationsInfoPageState extends State<MedicationsInfoPage> {
               child: TextField(
                 onChanged: _searchMedications,
                 decoration: const InputDecoration(
-                  hintText: 'Search by medication name...',
+                  hintText: 'Искать лекарство по названию...',
                   border: InputBorder.none,
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                   contentPadding: EdgeInsets.symmetric(vertical: 12),

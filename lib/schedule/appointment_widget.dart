@@ -17,7 +17,7 @@ class NextAppointmentWidget extends StatefulWidget {
 class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
   String _appointmentTime = '';
   String _patientName = '';
-  String _timeMessage = 'No appointments';
+  String _timeMessage = 'Приемов нет';
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
         DateTime appointmentDate = (appointment['date'] as Timestamp).toDate();
         String timeSlot = appointment['timeSlot'];
 
-        DateTime timeSlotDateTime = DateFormat('h:mm a').parse(timeSlot);
+        DateTime timeSlotDateTime = DateFormat.jm('ru_RU').parse(timeSlot);
         DateTime fullAppointmentDate = DateTime(
           appointmentDate.year,
           appointmentDate.month,
@@ -71,10 +71,10 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
 
         String dayInfo;
         if (now.year == closestDateTime!.year && now.month == closestDateTime!.month && now.day == closestDateTime!.day) {
-          dayInfo = 'Today';
+          dayInfo = 'Сегодня';
         } else {
           int daysDifference = closestDateTime!.difference(now).inDays;
-          dayInfo = 'in ${daysDifference + 1} day(s)';
+          dayInfo = 'через ${daysDifference + 1} ${daysDifference == 0 ? 'день' : daysDifference > 0 && daysDifference < 4 ? 'дня' : 'дней'}';
         }
 
         setState(() {

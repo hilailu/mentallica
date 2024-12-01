@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../auth/auth.dart';
@@ -80,7 +81,22 @@ class _CalendarPageState extends State<CalendarPage> {
                 'contactName': contactName,
               });
 
-              appointments.sort((a, b) => a['date'].compareTo(b['date']));
+              appointments.sort((a, b) {
+                DateTime aDate = (a['date']);
+                DateTime bDate = (b['date']);
+
+                if (aDate.isAtSameMomentAs(bDate)) {
+                  String aTime = a['timeSlot'];
+                  String bTime = b['timeSlot'];
+
+                  DateTime aTimeDate = DateFormat.jm('ru_RU').parse(aTime);
+                  DateTime bTimeDate = DateFormat.jm('ru_RU').parse(bTime);
+
+                  return aTimeDate.compareTo(bTimeDate);
+                } else {
+                  return aDate.compareTo(bDate);
+                }
+              });
 
               setState(() {
                 _futureAppointments = appointments;
@@ -199,7 +215,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${_formatDate(appointment['date'])}, ${appointment['timeSlot']}',
+                          '${DateFormat('d MMM yyyy', 'ru_RU').format(appointment['date'])}, ${appointment['timeSlot']}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

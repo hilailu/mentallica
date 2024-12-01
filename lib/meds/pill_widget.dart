@@ -11,9 +11,9 @@ class NextPillWidget extends StatefulWidget {
 
 class _NextPillWidgetState extends State<NextPillWidget> {
   String _medicationId = '';
-  String nextDoseInfo = 'Сегодня';
-  String nextDoseTime = '12:00';
-  String nextDoseDetails = 'Ибупрофен, 2 шт.';
+  String nextDoseInfo = 'Таблеток нет';
+  String nextDoseTime = '';
+  String nextDoseDetails = '';
 
   @override
   void initState() {
@@ -109,7 +109,6 @@ class _NextPillWidgetState extends State<NextPillWidget> {
 
     DateTime? closestDateTime;
 
-    // Iterate over the next 7 days to find the nearest dose
     for (int i = 0; i < 7; i++) {
       DateTime date = now.add(Duration(days: i));
 

@@ -41,8 +41,6 @@ class FirebaseApi {
 
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
-
-    // navigate to notifs screen
   }
 
   Future initLocalNotifications() async {

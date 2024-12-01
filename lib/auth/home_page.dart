@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
         .get();
 
     if (userDoc.exists) {
-      _nameController.text = userDoc.get('name') ?? 'User';
+      _nameController.text = userDoc.get('name') ?? 'Пользователь';
     }
   }
 

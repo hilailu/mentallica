@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../auth/auth.dart';
 
@@ -16,9 +15,9 @@ class ScheduleForm extends StatefulWidget {
   });
 
   ScheduleForm.empty({super.key})
-      : schedules = ['9:00 AM', '5:00 PM'],
-        lunchBreak = ['1:00 PM', '2:00 PM'],
-        workingDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+      : schedules = ['9:00', '17:00'],
+        lunchBreak = ['13:00', '14:00'],
+        workingDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт'];
 
   @override
   _ScheduleFormState createState() => _ScheduleFormState();
@@ -26,10 +25,10 @@ class ScheduleForm extends StatefulWidget {
 
 
 class _ScheduleFormState extends State<ScheduleForm> {
-  late List<String> _schedules = ['9:00 AM', '5:00 PM'];
-  late List<String> _lunchBreak = ['1:00 PM', '2:00 PM'];
-  late List<String> _workingDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-  final List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  late List<String> _schedules = ['9:00', '17:00'];
+  late List<String> _lunchBreak = ['13:00', '14:00'];
+  late List<String> _workingDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт'];
+  final List<String> days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
   Map<String, dynamic> _selectedContact = {};
   List<Map<String, dynamic>> _contacts = [];
@@ -130,7 +129,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Search Contact'),
+                decoration: InputDecoration(labelText: 'Поиск контакта'),
                 onChanged: (value) {
                   setState(() {
                     _filteredContacts = _contacts
@@ -171,7 +170,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Schedule',
+          'Расписание',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5)
@@ -187,16 +186,16 @@ class _ScheduleFormState extends State<ScheduleForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Workplace', style: _sectionTitleStyle()),
+                  Text('Место работы', style: _sectionTitleStyle()),
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: _showContactSearch,
                     child: InputDecorator(
                       decoration: const InputDecoration(
-                        labelText: 'Select Location',
+                        labelText: 'Выбрать место',
                         border: OutlineInputBorder(),
                       ),
-                      child: Text(_selectedContact['name'] ?? 'Tap to select a contact'),
+                      child: Text(_selectedContact['name'] ?? 'Нажмите, чтобы выбрать контакт'),
                     ),
                   ),
                 ],
@@ -211,7 +210,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Working days', style: _sectionTitleStyle()),
+                  Text('Рабочие дни', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 6.0,
@@ -251,7 +250,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Working hours', style: _sectionTitleStyle()),
+                  Text('Рабочие часы', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   Column(
                     children: _schedules
@@ -261,7 +260,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
                       int index = entry.key;
                       String time = entry.value;
                       return ListTile(
-                        title: Text(index == 0 ? 'Start' : 'End'),
+                        title: Text(index == 0 ? 'Начало' : 'Конец'),
                         trailing: Text(time),
                         onTap: () async {
                           TimeOfDay? selectedTime = await showTimePicker(
@@ -287,7 +286,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Lunch break', style: _sectionTitleStyle()),
+                  Text('Обеденный перерыв', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   Column(
                     children: _lunchBreak
@@ -297,7 +296,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
                       int index = entry.key;
                       String time = entry.value;
                       return ListTile(
-                        title: Text(index == 0 ? 'Start' : 'End'),
+                        title: Text(index == 0 ? 'Начало' : 'Конец'),
                         trailing: Text(time),
                         onTap: () async {
                           TimeOfDay? selectedTime = await showTimePicker(
@@ -324,7 +323,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8BACA5),
               ),
-              child: const Text('Save', style: TextStyle(color: Colors.white)),
+              child: const Text('Сохранить', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

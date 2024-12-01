@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   String role = "Patient";
   String? errorMessage = "";
   bool isLogin = true;
+  bool _isPasswordVisible = false;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
@@ -37,6 +38,13 @@ class _LoginPageState extends State<LoginPage> {
           errorMessage = e.message;
           _isProcessing = false;
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage!),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
@@ -56,6 +64,13 @@ class _LoginPageState extends State<LoginPage> {
           errorMessage = e.message;
           _isProcessing = false;
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage!),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
@@ -79,6 +94,13 @@ class _LoginPageState extends State<LoginPage> {
           if (mounted) {
             setState(() {
               errorMessage = "Документ не существует";
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(errorMessage!),
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 5),
+                ),
+              );
               _isProcessing = false;
             });
           }
@@ -89,42 +111,81 @@ class _LoginPageState extends State<LoginPage> {
 
   void signIn() async {
     try {
-      Auth().signInWithEmailAndPassword(
+      await Auth().signInWithEmailAndPassword(
         email: _controllerEmail.text,
         password: _controllerPassword.text,
       );
       route();
-    } on FirebaseAuthException catch (e) {
+    } catch (e) {
       setState(() {
-        errorMessage = e.message;
+        errorMessage = e.toString();
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage!),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 5),
+        ),
+      );
     }
   }
 
   void signUp() async {
-    const CircularProgressIndicator();
-    await Auth()
-          .createUserWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text)
-          .then((value) => {postDetailsToFirestore()})
-          .catchError((e) { errorMessage = e;});
-    route();
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
+      await Auth().createUserWithEmailAndPassword(
+        email: _controllerEmail.text,
+        password: _controllerPassword.text,
+      );
+
+      await postDetailsToFirestore();
+
+      if (mounted) {
+        Navigator.pop(context);
+        route();
+      }
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? 'Ошибка регистрации'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    } catch (e) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка: $e'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    }
   }
 
-  void postDetailsToFirestore() async {
-    var user = Auth().currentUser;
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
+  Future<void> postDetailsToFirestore() async {
+    try {
+      var user = Auth().currentUser;
+      if (user == null) throw Exception('Пользователь не найден.');
 
-    await ref.doc(user!.uid).set({
-      'email': _controllerEmail.text,
-      'role': role,
-      'name': 'Пользователь'
-    });
+      CollectionReference ref = FirebaseFirestore.instance.collection('users');
 
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      await ref.doc(user.uid).set({
+        'email': _controllerEmail.text,
+        'role': role,
+        'name': 'Пользователь',
+      });
+    } catch (e) {
+      throw Exception('Ошибка при сохранении данных в Firestore: $e');
     }
   }
 
@@ -137,22 +198,39 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _entryField(String title, TextEditingController controller, {bool isPassword = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: TextField(
-        controller: controller,
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          labelText: title,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: TextField(
+            controller: controller,
+            obscureText: isPassword && !_isPasswordVisible,
+            decoration: InputDecoration(
+              labelText: title,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Color(0xFF8BACA5)),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              suffixIcon: isPassword
+                  ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: const Color(0xFF8BACA5),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              )
+                  : null,
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Color(0xFF8BACA5)),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -291,7 +369,6 @@ class _LoginPageState extends State<LoginPage> {
                 _roleSelection(),
                 _entryField("Почта", _controllerEmail),
                 _entryField("Пароль", _controllerPassword, isPassword: true),
-                _errorMessage(),
                 const SizedBox(height: 10),
                 _submitButton(),
                 _loginOrRegisterButton(),

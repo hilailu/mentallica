@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import '../auth/auth.dart';
 import 'medication_service.dart';
 import 'package:intl/intl.dart';
 
@@ -500,8 +501,20 @@ class _MedicationFormState extends State<MedicationForm> {
                 ),
 
                 ElevatedButton.icon(
-                  onPressed: () {
-                    MedicationService().saveMedication(
+                  onPressed: () async {
+                    final user = Auth().currentUser;
+                    if (user == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Сначала войдите в аккаунт."),
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                      return;
+                    }
+
+                    await MedicationService().saveMedication(
                       medicationId: _medicationId,
                       name: _name,
                       dose: _dose,
@@ -515,15 +528,13 @@ class _MedicationFormState extends State<MedicationForm> {
                       endDate: _endDate,
                       wasTaken: _wasTaken,
                     );
+
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme
-                        .of(context)
-                        .primaryColor,
+                    backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

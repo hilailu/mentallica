@@ -11,7 +11,7 @@ class _AddArticlePageState extends State<AddArticlePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-  List<String> _availableTags = ['Депрессия', 'Тревога', 'Стресс', 'Панические атаки', 'Советы'];
+  List<String> _availableTags = ['Депрессия', 'Тревожность', 'Стресс', 'Панические атаки', 'Советы'];
   Set<String> _selectedTags = {};
 
   Future<void> _saveArticle() async {

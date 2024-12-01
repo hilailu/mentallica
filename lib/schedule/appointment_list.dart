@@ -20,7 +20,7 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Appointments',
+            'Приемы',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           backgroundColor: const Color(0xFF8BACA5),
@@ -28,8 +28,8 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
             labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
             indicatorColor: Colors.white,
             tabs: [
-              Tab(text: 'Future'),
-              Tab(text: 'Completed'),
+              Tab(text: 'Будущие'),
+              Tab(text: 'Завершенные'),
             ],
           ),
         ),
@@ -79,7 +79,7 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No appointments found.'));
+            return const Center(child: Text('Приемов не найдено.'));
           }
 
           List<DocumentSnapshot> appointments = snapshot.data!.docs;
@@ -87,7 +87,18 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
           appointments.sort((a, b) {
             DateTime aDate = (a['date'] as Timestamp).toDate();
             DateTime bDate = (b['date'] as Timestamp).toDate();
-            return aDate.compareTo(bDate);
+
+            if (aDate.isAtSameMomentAs(bDate)) {
+              String aTime = a['timeSlot'];
+              String bTime = b['timeSlot'];
+
+              DateTime aTimeDate = DateFormat.jm('ru_RU').parse(aTime);
+              DateTime bTimeDate = DateFormat.jm('ru_RU').parse(bTime);
+
+              return aTimeDate.compareTo(bTimeDate);
+            } else {
+              return aDate.compareTo(bDate);
+            }
           });
 
           return ListView.builder(
@@ -98,7 +109,7 @@ class _AppointmentsTabState extends State<AppointmentsTab> {
               var timeSlot = appointment['timeSlot'];
               var patientId = appointment['patientId'];
 
-              final DateFormat dateFormatter = DateFormat("d MMM ''yy");
+              final DateFormat dateFormatter = DateFormat("d MMM yyyy", 'ru_RU');
               String formattedDate = dateFormatter.format(appointmentDate);
 
               return FutureBuilder<DocumentSnapshot>(

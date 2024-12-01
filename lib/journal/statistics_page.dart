@@ -15,6 +15,17 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
   List<JournalEntry> _entries = [];
   bool _isLoading = true;
 
+  Map<String, Color> moodColors = {
+    'Энтузиазм': const Color(0xFFEEC27F),
+    'Радость': const Color(0xFFECA670),
+    'Спокойствие': const Color(0xFF8BACA5),
+    'Смущение': const Color(0xFFE497AD),
+    'Усталость': const Color(0xFF9785CC),
+    'Грусть': const Color(0xFF78C0D6),
+    'Злость': const Color(0xFFDC6C6C),
+    'Тревожность': const Color(0xFF746A6A),
+  };
+
   @override
   void initState() {
     super.initState();
@@ -85,20 +96,25 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
   }
 
   Widget _buildMoodChart(Map<String, int> moodFrequency) {
-    final List<Color> barColors = [
-      const Color(0xFF8BACA5), const Color(0xFF78C0D6),
-      const Color(0xFFEEC27F), const Color(0xFFE29E85),
-      const Color(0xFF746A6A)
-    ];
+    List<MapEntry<String, int>> sortedMoodFrequency = moodFrequency.entries.toList()
+      ..sort((a, b) {
+        int indexA = moodColors.keys.toList().indexOf(a.key);
+        int indexB = moodColors.keys.toList().indexOf(b.key);
+        return indexA.compareTo(indexB);
+      });
 
-    List<BarChartGroupData> barGroups = moodFrequency.entries.map((entry) {
-      int index = moodFrequency.keys.toList().indexOf(entry.key);
+    List<BarChartGroupData> barGroups = sortedMoodFrequency.map((entry) {
+      String mood = entry.key;
+      int frequency = entry.value;
+
+      Color barColor = moodColors[mood] ?? Colors.grey;
+
       return BarChartGroupData(
         x: entry.key.hashCode,
         barRods: [
           BarChartRodData(
-            toY: entry.value.toDouble(),
-            color: barColors[index % barColors.length],
+            toY: frequency.toDouble(),
+            color: barColor,
             width: 20,
             borderRadius: BorderRadius.circular(6),
           ),
@@ -188,7 +204,14 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
   }
 
   Widget _buildCorrelationChart(Map<String, Map<String, int>> correlationData) {
-    List<BarChartGroupData> barGroups = correlationData.entries.map((entry) {
+    List<MapEntry<String, Map<String, int>>> sortedCorrelationData = correlationData.entries.toList()
+      ..sort((a, b) {
+        int indexA = moodColors.keys.toList().indexOf(a.key);
+        int indexB = moodColors.keys.toList().indexOf(b.key);
+        return indexA.compareTo(indexB);
+      });
+
+    List<BarChartGroupData> barGroups = sortedCorrelationData.map((entry) {
       return BarChartGroupData(
         x: entry.key.hashCode,
         barRods: [
@@ -200,7 +223,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
           ),
           BarChartRodData(
             toY: entry.value['symptoms']!.toDouble(),
-            color: const Color(0xFFE29E85),
+            color: const Color(0xFFDC6C6C),
             width: 10,
             borderRadius: BorderRadius.circular(6),
           ),

@@ -29,8 +29,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? role = 'Patient';
-  String? name = 'User';
+  String? role;
+  String? name;
   List<MedicationWiki> _medicationsWiki = [];
 
   @override
@@ -49,6 +49,11 @@ class _HomePageState extends State<HomePage> {
         role = userRole;
         name = userName;
       }
+      else
+        {
+          role = 'Patient';
+          name = 'Пользователь';
+        }
     });
   }
 
@@ -502,6 +507,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   Text('Привет, $name 👋', style: const TextStyle(
                       fontWeight: FontWeight.w800, fontSize: 28),),
                   const SizedBox(height: 10),
@@ -623,7 +629,7 @@ class _HomePageState extends State<HomePage> {
                                     child: const SizedBox(
                                       width: 120,
                                       child: Text(
-                                        'Хотите написать статью?',
+                                        'Написать статью?',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -675,7 +681,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Все ',
+                                  'Смотреть все ',
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),
