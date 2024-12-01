@@ -127,6 +127,37 @@ class _TestPageState extends State<TestPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Progress Bar
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '0%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: (_currentQuestionIndex + 1) / _questions.length, // Calculate the progress as a fraction
+                      backgroundColor: Colors.grey.shade300,
+                      color: Theme.of(context).primaryColor,
+                      minHeight: 5,
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Text(
+                    '100%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16.0),
                 width: double.infinity,
@@ -218,7 +249,7 @@ class _TestPageState extends State<TestPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                         'След.',
+                          'След.',
                           style: TextStyle(color: Colors.white),
                         ),
                         SizedBox(width: 10),

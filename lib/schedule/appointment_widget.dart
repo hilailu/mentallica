@@ -86,32 +86,17 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {
-      Navigator.push(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  const AppointmentsPage()));
-    },
-    child: Container(
-      width: 180,
-      height: 120,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 4),
+            builder: (context) => const AppointmentsPage(),
           ),
-        ],
-      ),
+        );
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +111,10 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: Text(
               _timeMessage,
-              style: const TextStyle(fontSize: 14, color: Color(0xFFE29E85)),
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFFE29E85),
+              ),
             ),
           ),
           Row(
@@ -152,6 +140,6 @@ class _NextAppointmentWidgetState extends State<NextAppointmentWidget> {
           ),
         ],
       ),
-    ));
+    );
   }
 }
