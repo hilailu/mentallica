@@ -147,11 +147,14 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                         height: 20,
                         width: 20,
                       ),
-                      Text(
+                      const SizedBox(height: 15,),
+                      Transform.rotate(
+                          angle: 55 * 3.14159 / 180, // Rotate text 90 degrees counter-clockwise
+                          child: Text(
                         mood,
-                        style: const TextStyle(fontSize: 13, color: Colors
+                        style: const TextStyle(fontSize: 8, color: Colors
                             .black),
-                      ),
+                      )),
                     ],
                   );
                 },
@@ -192,13 +195,13 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
           BarChartRodData(
             toY: entry.value['positives']!.toDouble(),
             color: const Color(0xFF8BACA5),
-            width: 20,
+            width: 10,
             borderRadius: BorderRadius.circular(6),
           ),
           BarChartRodData(
             toY: entry.value['symptoms']!.toDouble(),
             color: const Color(0xFFE29E85),
-            width: 20,
+            width: 10,
             borderRadius: BorderRadius.circular(6),
           ),
         ],
@@ -245,11 +248,14 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                         height: 20,
                         width: 20,
                       ),
-                      Text(
+                      const SizedBox(height: 15,),
+                      Transform.rotate(
+                          angle: 55 * 3.14159 / 180, // Rotate text 90 degrees counter-clockwise
+                          child: Text(
                         mood,
-                        style: const TextStyle(fontSize: 13, color: Colors
+                        style: const TextStyle(fontSize: 8, color: Colors
                             .black),
-                      ),
+                      )),
                     ],
                   );
                 },
@@ -288,7 +294,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
               ),
             ),
             const SizedBox(height: 16),
-            SizedBox(height: 274, child: chart),
+            SizedBox(height: 270, child: chart),
           ],
         ),
       ),
@@ -304,7 +310,7 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-            'Statistics', style: TextStyle(fontWeight: FontWeight.bold)),
+            'Статистика', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFF8BACA5),
       ),
       body: Column(
@@ -318,9 +324,9 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                 indicatorColor: Colors.white,
                 controller: _tabController,
                 tabs: const [
-                  Tab(text: 'Week'),
-                  Tab(text: 'Month'),
-                  Tab(text: 'Year'),
+                  Tab(text: 'Неделя'),
+                  Tab(text: 'Месяц'),
+                  Tab(text: 'Год'),
                 ],
               ))
           ),
@@ -333,15 +339,15 @@ class _StatisticsPageState extends State<StatisticsPage> with SingleTickerProvid
                   : _entries.isEmpty
                   ? const Center(
                 child: Text(
-                  'Not enough data to generate the chart.',
+                  'Не хватает данных для генерации статистики.',
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               )
                   : ListView(
                 children: [
                   _buildChartCard(
-                      'Mood Frequency', _buildMoodChart(moodFrequency)),
-                  _buildChartCard('Mood Correlation (Positives & Symptoms)',
+                      'Частота настроений', _buildMoodChart(moodFrequency)),
+                  _buildChartCard('Корреляция настроений\n(Позитивные моменты и симптомы)',
                       _buildCorrelationChart(correlationData)),
                 ],
               ),

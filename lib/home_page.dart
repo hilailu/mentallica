@@ -398,10 +398,10 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 12),
                     _buildFeaturedTest(
                       'Аутизм',
-                      '3 мин',
+                      '2 мин',
                       'assets/images/autism.png',
                       'Определение симптомов по шкале аутизма для взрослых.',
-                      'CATQ',
+                      'raadsr',
                     ),
                     const SizedBox(height: 20),
                   ],

@@ -11,9 +11,9 @@ class NextPillWidget extends StatefulWidget {
 
 class _NextPillWidgetState extends State<NextPillWidget> {
   String _medicationId = '';
-  String nextDoseInfo = 'Today';
+  String nextDoseInfo = 'Сегодня';
   String nextDoseTime = '12:00';
-  String nextDoseDetails = 'Ibuprofen, 2 pills';
+  String nextDoseDetails = 'Ибупрофен, 2 шт.';
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _NextPillWidgetState extends State<NextPillWidget> {
           nextName = name;
           nextDose = dose;
           nextMeasurement = measurement;
-          nextTime = DateFormat('h:mm a').format(nextDoseDateTime);
+          nextTime = DateFormat.jm('ru_RU').format(nextDoseDateTime);
         });
       }
     }
@@ -71,10 +71,10 @@ class _NextPillWidgetState extends State<NextPillWidget> {
     if (closestDoseDateTime != null) {
       String dayInfo;
       if (now.year == closestDoseDateTime!.year && now.month == closestDoseDateTime!.month && now.day == closestDoseDateTime!.day) {
-        dayInfo = 'Today';
+        dayInfo = 'Сегодня';
       } else {
         int daysDifference = closestDoseDateTime!.difference(now).inDays;
-        dayInfo = 'in ${daysDifference + 1} day(s)';
+        dayInfo = 'через ${daysDifference + 1} ${daysDifference == 0 ? 'день' : daysDifference > 0 && daysDifference < 4 ? 'дня' : 'дней'}';
       }
 
       setState(() {
@@ -86,22 +86,21 @@ class _NextPillWidgetState extends State<NextPillWidget> {
   }
 
   DateTime? _getNextDoseDateTime(List<String> daysTaken, List<String> schedules, DateTime now) {
-    // Convert daysTaken to weekdays
     List<int> daysOfWeek = daysTaken.map((day) {
       switch (day) {
-        case 'Mon':
+        case 'Пн':
           return DateTime.monday;
-        case 'Tue':
+        case 'Вт':
           return DateTime.tuesday;
-        case 'Wed':
+        case 'Ср':
           return DateTime.wednesday;
-        case 'Thu':
+        case 'Чт':
           return DateTime.thursday;
-        case 'Fri':
+        case 'Пт':
           return DateTime.friday;
-        case 'Sat':
+        case 'Сб':
           return DateTime.saturday;
-        case 'Sun':
+        case 'Вс':
           return DateTime.sunday;
         default:
           return DateTime.monday;
@@ -116,7 +115,7 @@ class _NextPillWidgetState extends State<NextPillWidget> {
 
       if (daysOfWeek.contains(date.weekday)) {
         for (String schedule in schedules) {
-          DateTime scheduleTime = DateFormat('h:mm a').parse(schedule);
+          DateTime scheduleTime = DateFormat.jm('ru_RU').parse(schedule);
           DateTime fullDateTime = DateTime(
             date.year,
             date.month,

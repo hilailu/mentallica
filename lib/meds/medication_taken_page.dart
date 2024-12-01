@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mentallica/main.dart';
 import 'medication_service.dart';
 
 class MedicationTrackingPage extends StatefulWidget {
@@ -56,8 +57,8 @@ class _MedicationTrackingPageState extends State<MedicationTrackingPage> {
     List<DateTime> datesToShow = _generateDates(today);
 
     for (var date in datesToShow) {
-      String formattedDate = DateFormat('EEE, MMM d').format(date);
-      String weekDay = DateFormat('EEE').format(date);
+      String formattedDate = DateFormat('EEE, MMM d', 'ru_RU').format(date);
+      String weekDay = DateFormat('EEE', 'ru_RU').format(date).capitalize();
 
       if (widget.daysTaken.contains(weekDay)) {
         trackingItems.add(
@@ -148,7 +149,7 @@ class _MedicationTrackingPageState extends State<MedicationTrackingPage> {
             ),
             const SizedBox(height: 8.0),
             const Text(
-              'No meds for this day',
+              'Лекарст в этот день нет.',
               style: TextStyle(
                 fontSize: 14.0,
                 color: Colors.grey,

@@ -22,7 +22,7 @@ class _MedicationPageState extends State<MedicationPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Medications',
+            'Лекарства',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           backgroundColor: const Color(0xFF8BACA5),
@@ -30,8 +30,8 @@ class _MedicationPageState extends State<MedicationPage> {
             labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
             indicatorColor: Colors.white,
             tabs: [
-              Tab(text: 'Active'),
-              Tab(text: 'Completed'),
+              Tab(text: 'Активные'),
+              Tab(text: 'Завершенные'),
             ],
           ),
         ),
@@ -83,7 +83,7 @@ class MedicationTab extends StatefulWidget {
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return const Center(
                 child: Text(
-                  'No medications found.',
+                  'Лекарств не найдено.',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),
                 ),
               );
@@ -99,7 +99,7 @@ class MedicationTab extends StatefulWidget {
                 var startDate = (med['startDate'] as Timestamp).toDate();
                 var endDate = (med['endDate'] as Timestamp).toDate();
 
-                final DateFormat formatter = DateFormat("d MMM ''yy");
+                final DateFormat formatter = DateFormat("d MMM yyyy", 'ru_RU');
                 String formattedStartDate = formatter.format(startDate);
                 String formattedEndDate = formatter.format(endDate);
 
@@ -138,7 +138,7 @@ class MedicationTab extends StatefulWidget {
               setState(() {});
             });
           },
-          tooltip: 'Add Medication',
+          tooltip: 'Добавить лекарство',
           backgroundColor: const Color(0xFF8BACA5),
           child: const Icon(Icons.add, size: 28),
         ),
@@ -208,7 +208,7 @@ class MedicationCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                '$progressDays out of $totalDays days completed',
+                '$progressDays из $totalDays дней пройдено',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black54,

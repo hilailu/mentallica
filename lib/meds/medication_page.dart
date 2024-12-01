@@ -23,16 +23,16 @@ class MedicationForm extends StatefulWidget {
 
 
 class _MedicationFormState extends State<MedicationForm> {
-  late String _name = 'New Medication';
+  late String _name = 'Лекарство';
   late String _medicationType = 'Pill';
   late String _dose = '0.5';
-  late String _measurement = 'mg';
+  late String _measurement = 'мг';
   late DateTime _startDate = DateTime.now();
   late DateTime _endDate = DateTime.now().add(const Duration(days: 14));
-  late String _timeRelation = 'before meals';
-  late List<String> _schedules = ['9:00 AM'];
+  late String _timeRelation = 'до еды';
+  late List<String> _schedules = ['11:00'];
   late int _reminderOffset = 5;
-  late List<String> _daysTaken = ['Tue','Thu','Sat'];
+  late List<String> _daysTaken = ['Вт','Чт','Сб'];
   late String _medicationId = '';
   late Map<String, Map<String, bool>> _wasTaken = {};
   bool _isLoading = true;
@@ -46,14 +46,14 @@ class _MedicationFormState extends State<MedicationForm> {
     MedicationType(name: 'Other', icon: PhosphorIcons.drop()),
   ];
 
-  final List<String> measurements = ['mg', 'ml', 'pieces'];
+  final List<String> measurements = ['мг', 'мл', 'шт.'];
   final List<String> mealTimes = [
-    'after meals',
-    'before meals',
-    'with food',
-    'doesn\'t matter'
+    'после еды',
+    'до еды',
+    'во время',
+    'не важно'
   ];
-  final List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  final List<String> days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
   @override
   void initState() {
@@ -102,7 +102,7 @@ class _MedicationFormState extends State<MedicationForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Medication",
+          "Лекарства",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -142,7 +142,7 @@ class _MedicationFormState extends State<MedicationForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name', style: _sectionTitleStyle()),
+                  Text('Название', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   TextFormField(
                     initialValue: _name,
@@ -166,7 +166,7 @@ class _MedicationFormState extends State<MedicationForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Type', style: _sectionTitleStyle()),
+                  Text('Тип', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 4.0,
@@ -202,7 +202,7 @@ class _MedicationFormState extends State<MedicationForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Single dose', style: _sectionTitleStyle()),
+                  Text('Дозировка', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -246,33 +246,33 @@ class _MedicationFormState extends State<MedicationForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('When to take it', style: _sectionTitleStyle()),
+              Text('Прием с едой', style: _sectionTitleStyle()),
               const SizedBox(height: 8),
               Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 spacing: 13.0,
                 children: mealTimes.map((time) {
-                  final words = time.split(' '); // Split the time into two words
+                  final words = time.split(' ');
                   return SizedBox(
-                    width: 76, // Ensure each chip has the same width
+                    width: 76,
                     child: ChoiceChip(
                       padding: const EdgeInsets.symmetric(horizontal: -4.0, vertical: 4.0),
                       showCheckmark: false,
                       selectedColor: const Color(0xFF8BACA5),
                       label: Center(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center, // Center the text vertically
-                          crossAxisAlignment: CrossAxisAlignment.center, // Center the text horizontally
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              words[0], // First word on the first row
-                              style: const TextStyle(fontSize: 14), // Larger font size for the first word
-                              overflow: TextOverflow.ellipsis, // Handles overflow if the text is too long
+                              words[0],
+                              style: const TextStyle(fontSize: 14),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            if (words.length > 1) // Only show the second word if it exists
+                            if (words.length > 1)
                               Text(
-                                words[1], // Second word on the second row
-                                style: const TextStyle(fontSize: 14), // Slightly smaller font size for the second word
+                                words[1],
+                                style: const TextStyle(fontSize: 14),
                                 overflow: TextOverflow.ellipsis,
                               ),
                           ],
@@ -299,7 +299,7 @@ class _MedicationFormState extends State<MedicationForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Schedule', style: _sectionTitleStyle()),
+              Text('Расписание', style: _sectionTitleStyle()),
               const SizedBox(height: 8),
               Column(
                 children: _schedules
@@ -309,7 +309,7 @@ class _MedicationFormState extends State<MedicationForm> {
                   int index = entry.key;
                   String time = entry.value;
                   return ListTile(
-                    title: Text('Dose ${index + 1}'),
+                    title: Text('Доза ${index + 1}'),
                     trailing: Text(time),
                     onTap: () async {
                       TimeOfDay? selectedTime = await showTimePicker(
@@ -338,7 +338,7 @@ class _MedicationFormState extends State<MedicationForm> {
                       }
                     },
                     child: const Text(
-                      '- Remove Dose',
+                      '- Удалить',
                       style: TextStyle(color: Colors.red),
                     ),
                   ),
@@ -346,10 +346,10 @@ class _MedicationFormState extends State<MedicationForm> {
                   TextButton(
                     onPressed: () {
                       setState(() {
-                        _schedules.add('9:00 AM');
+                        _schedules.add('11:00');
                       });
                     },
-                    child: const Text('+ Add Dose'),
+                    child: const Text('+ Добавить'),
                   ),
                 ],
               ),
@@ -365,16 +365,16 @@ class _MedicationFormState extends State<MedicationForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Reminder', style: _sectionTitleStyle()),
+                  Text('Уведомление', style: _sectionTitleStyle()),
                   ListTile(
-                    title: const Text('Reminder time'),
-                    trailing: Text('in $_reminderOffset min'),
+                    title: const Text('Время напоминания'),
+                    trailing: Text('за $_reminderOffset мин'),
                     onTap: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Set Reminder Time'),
+                            title: const Text('Установить время напоминания'),
                             content: TextFormField(
                               initialValue: _reminderOffset.toString(),
                               keyboardType: TextInputType.number,
@@ -386,7 +386,7 @@ class _MedicationFormState extends State<MedicationForm> {
                             ),
                             actions: [
                               TextButton(
-                                child: const Text('OK'),
+                                child: const Text('ОК'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -409,7 +409,7 @@ class _MedicationFormState extends State<MedicationForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Course duration', style: _sectionTitleStyle()),
+                  Text('Длительность курса', style: _sectionTitleStyle()),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 6.0,
@@ -440,8 +440,8 @@ class _MedicationFormState extends State<MedicationForm> {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    title: const Text('Start'),
-                    trailing: Text(DateFormat('yyyy-MM-dd').format(_startDate)),
+                    title: const Text('Начало'),
+                    trailing: Text(DateFormat('yyyy-MM-dd', 'ru_RU').format(_startDate)),
                     onTap: () async {
                       DateTime? selectedDate = await showDatePicker(
                         context: context,
@@ -457,8 +457,8 @@ class _MedicationFormState extends State<MedicationForm> {
                     },
                   ),
                   ListTile(
-                    title: const Text('End'),
-                    trailing: Text(DateFormat('yyyy-MM-dd').format(_endDate)),
+                    title: const Text('Конец'),
+                    trailing: Text(DateFormat('yyyy-MM-dd', 'ru_RU').format(_endDate)),
                     onTap: () async {
                       DateTime? selectedDate = await showDatePicker(
                         context: context,
@@ -496,7 +496,7 @@ class _MedicationFormState extends State<MedicationForm> {
                     ),
                   ),
                   icon: const Icon(Icons.delete, color: Colors.white),
-                  label: const Text("Delete"),
+                  label: const Text("Удалить"),
                 ),
 
                 ElevatedButton.icon(
@@ -529,7 +529,7 @@ class _MedicationFormState extends State<MedicationForm> {
                     ),
                   ),
                   icon: const Icon(Icons.save, color: Colors.white),
-                  label: const Text("Save"),
+                  label: const Text("Сохранить"),
                 ),
               ],
             ),

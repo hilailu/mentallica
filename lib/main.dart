@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mentallica/notifs/FirebaseApi.dart';
 import 'contacts/contacts_page.dart';
 import 'firebase_options.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'auth/profile_page.dart';
 import 'home_page.dart';
@@ -37,9 +37,15 @@ class MyApp extends StatelessWidget {
       ),
       home: const AppMainPage(),
       supportedLocales: const [
-        Locale('ru', 'RU'),
         Locale('en', 'US'),
+        Locale('ru', 'RU'),
       ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: const Locale('ru', 'RU'),
     );
   }
 }
@@ -97,5 +103,14 @@ class _AppMainPageState extends State<AppMainPage> {
         ],
       ),
     );
+  }
+}
+
+extension StringCapitalize on String {
+  String capitalize() {
+    if (this.isEmpty) {
+      return this;
+    }
+    return '${this[0].toUpperCase()}${this.substring(1)}';
   }
 }

@@ -14,11 +14,11 @@ class JournalEntryPage extends StatefulWidget {
 }
 
 class _JournalEntryPageState extends State<JournalEntryPage> {
-  final List<String> _moods = ['Happy', 'Excited', 'Neutral', 'Sad', 'Angry'];
-  final List<String> _symptoms = ['Anxiety', 'Irritability', 'Anger', 'Depression', 'Suicidal thoughts', 'Insomnia', 'Dissociation'];
-  final List<String> _positives = ['Family', 'Romance', 'Friendship', 'Exercise', 'Relaxation', 'Games', 'Pets', 'Travel'];
+  final List<String> _moods = ['Радость', 'Энтузиазм', 'Спокойствие', 'Смущение', 'Усталость', 'Тревожность', 'Грусть', 'Злость'];
+  final List<String> _symptoms = ['Тревога', 'Гнев', 'Уныние', 'Раздражительность', 'Суицидальные мысли', 'Бессонница', 'Диссоциация', 'Головная боль'];
+  final List<String> _positives = ['Семья', 'Друзья', 'Любовь', 'Спорт', 'Отдых', 'Хобби', 'Питомцы', 'Путешествия'];
 
-  String _selectedMood = 'Happy';
+  String _selectedMood = 'Радость';
   int _currentMoodIndex = 0;
   Set<String> _selectedSymptoms = {};
   Set<String> _selectedPositives = {};
@@ -82,7 +82,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat("d MMM ''yy");
+    final DateFormat formatter = DateFormat("d MMM ''yy", 'ru_RU');
     String formattedDate = formatter.format(widget.date);
 
     return Scaffold(
@@ -99,88 +99,103 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
           children: [
             _buildSectionContainer(
               context,
-              title: 'Mood',
-              child: Wrap(
-                spacing: 4.0,
-                runSpacing: 12.0,
-                children: _moods.map((mood) {
-                  return SizedBox(
-                    width: 66,
-                    child: ChoiceChip(
-                      side: BorderSide.none,
-                      showCheckmark: false,
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      label: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 4),
-                          Image.asset('assets/images/$mood.png', height: 40),
-                          const SizedBox(height: 4),
-                          Text(
-                            mood,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _selectedMood == mood
-                                  ? Colors.white
-                                  : Colors.black87,
-                            ),
+              title: 'Настроение',
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _moods.map((mood) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0), // Add spacing between chips
+                      child: SizedBox(
+                        width: 66,
+                        child: ChoiceChip(
+                          side: BorderSide.none,
+                          showCheckmark: false,
+                          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: -4.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ],
+                          label: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 4),
+                              Image.asset('assets/images/$mood.png', height: 40),
+                              const SizedBox(height: 4),
+                              Text(
+                                mood,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: _selectedMood == mood
+                                      ? Colors.white
+                                      : Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          selected: _selectedMood == mood,
+                          selectedColor: const Color(0xFF8BACA5),
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedMood = mood;
+                            });
+                          },
+                        ),
                       ),
-                      selected: _selectedMood == mood,
-                      selectedColor: const Color(0xFF8BACA5),
-                      onSelected: (selected) {
-                        setState(() {
-                          _selectedMood = mood;
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             _buildSectionContainer(
               context,
-              title: 'Symptoms',
-              child: Wrap(
-                spacing: 8.0,
-                children: _symptoms.map((symptom) {
-                  final isSelected = _selectedSymptoms.contains(symptom);
-                  return ChoiceChip(
-                    showCheckmark: false,
-                    label: Text(
-                      symptom,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: isSelected ? Colors.white : Colors.black87,
-                      ),
-                    ),
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                    selected: isSelected,
-                    selectedColor: const Color(0xFF8BACA5),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedSymptoms.add(symptom);
-                        } else {
-                          _selectedSymptoms.remove(symptom);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
+              title: 'Симптомы',
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  child: Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    alignment: WrapAlignment.start,
+                    children: _symptoms.map((symptom) {
+                      final isSelected = _selectedSymptoms.contains(symptom);
+                      return ChoiceChip(
+                        showCheckmark: false,
+                        label: Text(
+                          symptom,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isSelected ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                        selected: isSelected,
+                        selectedColor: const Color(0xFF8BACA5),
+                        onSelected: (selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedSymptoms.add(symptom);
+                            } else {
+                              _selectedSymptoms.remove(symptom);
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
+
             ),
             const SizedBox(height: 20),
             _buildSectionContainer(
               context,
-              title: 'Positive Moments',
-              child: Wrap(
+              title: 'Позитивные моменты',
+              child: SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: SizedBox(
+    child: Wrap(
                 spacing: 8.0,
                 children: _positives.map((positive) {
                   final isSelected = _selectedPositives.contains(positive);
@@ -209,16 +224,16 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                   );
                 }).toList(),
               ),
-            ),
+            ),),),
             const SizedBox(height: 20),
             _buildSectionContainer(
               context,
-              title: 'Describe your day',
+              title: 'Опишите свой день',
               child: TextField(
                 controller: _descriptionController,
-                maxLines: 8,
+                maxLines: 7,
                 decoration: InputDecoration(
-                  hintText: 'Write about your day...',
+                  hintText: 'Расскажите про свой день...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -243,7 +258,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                     ),
                   ),
                   icon: const Icon(Icons.delete, color: Colors.white),
-                  label: const Text("Delete"),
+                  label: const Text("Удалить"),
                 ),
 
                 ElevatedButton.icon(
@@ -260,7 +275,7 @@ class _JournalEntryPageState extends State<JournalEntryPage> {
                     ),
                   ),
                   icon: const Icon(Icons.save, color: Colors.white),
-                  label: const Text("Save"),
+                  label: const Text("Сохранить"),
                 ),
               ],
             ),
