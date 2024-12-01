@@ -93,9 +93,9 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hi, $name 👋',
+                    'Привет, $name 👋',
                     style: const TextStyle(
-                        fontWeight: FontWeight.w800, fontSize: 32),
+                        fontWeight: FontWeight.w800, fontSize: 28),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       HomeButton(
                         icon: PhosphorIcons.smiley(),
-                        text: 'Journal',
+                        text: 'Дневник',
                         color: const Color(0xFFEEC27F),
                         onTap: () {
                           Navigator.push(
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.pill(),
-                        text: 'Meds',
+                        text: 'Лекарства',
                         color: const Color(0xFFE29E85),
                         onTap: () {
                           Navigator.push(
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.pencil(),
-                        text: 'Tests',
+                        text: 'Тесты',
                         color: const Color(0xFF78C0D6),
                         onTap: () {
                           Navigator.push(
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.articleNyTimes(),
-                        text: 'Articles',
+                        text: 'Статьи',
                         color: const Color(0xFF746A6A),
                         onTap: () {
                           Navigator.push(
@@ -152,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.chartPie(),
-                        text: 'Stats',
+                        text: 'Статистика',
                         color: const Color(0xFF8BACA5),
                         onTap: () {
                           Navigator.push(
@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                                     child: const SizedBox(
                                       width: 120,
                                       child: Text(
-                                        'How do I feel today?',
+                                        'Как я себя чувствую?',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -316,18 +316,19 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  'Random test',
+                                  'Случайный тест',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
                                 ),
+                                SizedBox(height: 4,),
                                 SizedBox(
-                                  width: 160,
+                                  width: 200,
                                   height: 40,
                                   child: Text(
-                                    'Take one of our free personality tests',
+                                    'Пройдите один из наших бесплатных тестов',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white.withOpacity(0.8),
@@ -345,7 +346,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Featured Tests',
+                          'Популярные тесты',
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         ),
@@ -373,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'All Tests ',
+                                  'Все тесты ',
                                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                 ),
                                 PhosphorIcon(
@@ -388,18 +389,18 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 12),
                     _buildFeaturedTest(
-                      'Depression Test',
-                      '1 min',
+                      'Депрессия',
+                      '2 мин',
                       'assets/images/depression.png',
-                      'Based on the Beck Depression Inventory, which measures depression symptoms.',
-                      'PHQ9'
+                      'Тест на признаки депрессии по шкале Бека.',
+                      'beck'
                     ),
                     const SizedBox(height: 12),
                     _buildFeaturedTest(
-                      'Autism Spectrum Test',
-                      '3 min',
+                      'Аутизм',
+                      '3 мин',
                       'assets/images/autism.png',
-                      'Measuring Autism Spectrum Disorders across 10 different scales.',
+                      'Определение симптомов по шкале аутизма для взрослых.',
                       'CATQ',
                     ),
                     const SizedBox(height: 20),
@@ -501,15 +502,15 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hi, $name 👋', style: const TextStyle(
-                      fontWeight: FontWeight.w800, fontSize: 32),),
+                  Text('Привет, $name 👋', style: const TextStyle(
+                      fontWeight: FontWeight.w800, fontSize: 28),),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       HomeButton(
                         icon: PhosphorIcons.addressBookTabs(),
-                        text: 'Sessions',
+                        text: 'Приемы',
                         color: const Color(0xFFEEC27F),
                         onTap: () {
                           Navigator.push(
@@ -521,7 +522,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.pencil(),
-                        text: 'Schedule',
+                        text: 'Расписание',
                         color: const Color(0xFFE29E85),
                         onTap: () {
                           Navigator.push(
@@ -533,7 +534,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.articleNyTimes(),
-                        text: 'Articles',
+                        text: 'Статьи',
                         color: const Color(0xFF746A6A),
                         onTap: () {
                           Navigator.push(
@@ -548,7 +549,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       HomeButton(
                         icon: PhosphorIcons.pill(),
-                        text: 'Meds',
+                        text: 'Лекарства',
                         color: const Color(0xFF8BACA5),
                         onTap: () {
                           Navigator.push(
@@ -622,7 +623,7 @@ class _HomePageState extends State<HomePage> {
                                     child: const SizedBox(
                                       width: 120,
                                       child: Text(
-                                        'Want to write an article?',
+                                        'Хотите написать статью?',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -643,7 +644,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Medication Info',
+                          'Лекарства',
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         ),
@@ -674,7 +675,7 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'See All ',
+                                  'Все ',
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),

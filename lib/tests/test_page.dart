@@ -19,6 +19,7 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   List<String> _questions = [];
   List<String> _options = [];
+  String _testName = 'Тест';
   final Map<int, int> _answers = {};
   int _currentQuestionIndex = 0;
   String _warningMessage = '';
@@ -39,15 +40,16 @@ class _TestPageState extends State<TestPage> {
         setState(() {
           _questions = List<String>.from(doc['questions']);
           _options = List<String>.from(doc['options']);
+          _testName = doc['name'];
         });
       } else {
         setState(() {
-          _warningMessage = 'Test data not found';
+          _warningMessage = 'Данные теста не найдены';
         });
       }
     } catch (e) {
       setState(() {
-        _warningMessage = 'Error loading test data: $e';
+        _warningMessage = 'Ошибка загрузки теста: $e';
       });
     }
   }
@@ -55,7 +57,7 @@ class _TestPageState extends State<TestPage> {
   void _nextQuestion() {
     if (_answers[_currentQuestionIndex] == null) {
       setState(() {
-        _warningMessage = 'Please, pick an option';
+        _warningMessage = 'Пожалуйста, выберите вариант ответа';
       });
     } else {
       if (_currentQuestionIndex < _questions.length - 1) {
@@ -98,9 +100,9 @@ class _TestPageState extends State<TestPage> {
     if (_questions.isEmpty || _options.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(
-            widget.testName.toUpperCase(),
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+          title: const Text(
+            '',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
           backgroundColor: const Color(0xFF8BACA5),
         ),
@@ -113,73 +115,96 @@ class _TestPageState extends State<TestPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.testName.toUpperCase(),
+          _testName,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         backgroundColor: const Color(0xFF8BACA5),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                //color: Colors.white,
-                color: const Color(0xFFEFF5F6),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Text(
-                _questions[_currentQuestionIndex],
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headlineSmall,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ..._options
-                .asMap()
-                .entries
-                .map((entry) {
-              int index = entry.key;
-              String option = entry.value;
-
-              return Card(
-                color: Colors.grey.shade50,
-                elevation: 2,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: RadioListTile<int>(
-                  title: Text(option),
-                  value: index + 1,
-                  groupValue: _answers[_currentQuestionIndex],
-                  onChanged: (int? value) {
-                    _answerQuestion(value!);
-                  },
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF5F6),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-              );
-            }),
-            const SizedBox(height: 10),
-            if (_warningMessage.isNotEmpty)
-              Text(
-                _warningMessage,
-                style: const TextStyle(color: Colors.red),
+                child: Text(
+                  _questions[_currentQuestionIndex],
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.left,
+                ),
               ),
-            const SizedBox(height: 10),
+              const SizedBox(height: 20),
+              ..._options.asMap().entries.map((entry) {
+                int index = entry.key;
+                String option = entry.value;
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (_currentQuestionIndex > 0)
+                return Card(
+                  color: Colors.grey.shade50,
+                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: RadioListTile<int>(
+                    title: Text(option),
+                    value: index + 1,
+                    groupValue: _answers[_currentQuestionIndex],
+                    onChanged: (int? value) {
+                      _answerQuestion(value!);
+                    },
+                  ),
+                );
+              }),
+              const SizedBox(height: 10),
+              if (_warningMessage.isNotEmpty)
+                Text(
+                  _warningMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_currentQuestionIndex > 0)
+                    ElevatedButton(
+                      onPressed: _previousQuestion,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        fixedSize: const Size(120, 50),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.navigate_before, color: Colors.white),
+                          SizedBox(width: 10),
+                          Text(
+                            'Пред.',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    const SizedBox(width: 140),
+                  const Spacer(),
                   ElevatedButton(
-                    onPressed: _previousQuestion,
+                    onPressed: _nextQuestion,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
@@ -187,50 +212,24 @@ class _TestPageState extends State<TestPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      fixedSize: const Size(140, 50),
+                      fixedSize: const Size(120, 50),
                     ),
                     child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Icon(Icons.navigate_before, color: Colors.white),
-                        SizedBox(width: 10),
                         Text(
-                          'Previous',
+                         'След.',
                           style: TextStyle(color: Colors.white),
                         ),
+                        SizedBox(width: 10),
+                        Icon(Icons.navigate_next, color: Colors.white),
                       ],
                     ),
-                  )
-                else
-                  const SizedBox(width: 140),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: _nextQuestion,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    fixedSize: const Size(140, 50),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        _currentQuestionIndex < _questions.length - 1 ? 'Next' : 'Results',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.navigate_next, color: Colors.white),
-                    ],
-                  ),
-                ),
-              ],
-            )
-
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -252,7 +251,7 @@ class TestResultPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          config!.testName.toUpperCase(),
+          config!.name,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -280,15 +279,12 @@ class TestResultPage extends StatelessWidget {
                 ),
                 child: Text(
                   config!.description,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.justify,
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.left,
                   softWrap: true,
                 ),
               ),
-              ...results.entries.where((entry) => entry.key != 'Result').map((entry) {
+              ...results.entries.map((entry) {
                 return Container(
                   padding: const EdgeInsets.all(16),
                   margin: const EdgeInsets.symmetric(vertical: 8),
@@ -304,46 +300,29 @@ class TestResultPage extends StatelessWidget {
                     ],
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        entry.key,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        entry.value.toString(),
-                        style: const TextStyle(fontSize: 18),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${entry.key}: ',
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: entry.value.toString(),
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            ],
+                          ),
+                          overflow: TextOverflow.visible,
+                          softWrap: true,
+                        ),
                       ),
                     ],
                   ),
                 );
               }).toList(),
-              if (results.containsKey('Result'))
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEFF5F6),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    '${results['Result']}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.justify,
-                    softWrap: true,
-                  ),
-                ),
             ],
           ),
         ),

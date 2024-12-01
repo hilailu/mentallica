@@ -109,6 +109,7 @@ class _CalendarPageState extends State<CalendarPage> {
       body: Column(
         children: [
           TableCalendar(
+            locale: 'ru_RU',
             rowHeight: 80,
             firstDay: _firstDay,
             lastDay: _lastDay,
@@ -221,7 +222,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 : const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                'Записей на будущее нет',
+                'Записей на будущее пока нет',
                 style: TextStyle(fontSize: 16),
               ),
             ),

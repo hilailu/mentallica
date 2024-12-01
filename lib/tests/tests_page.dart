@@ -10,7 +10,7 @@ class TestsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Tests',
+          'Тесты',
           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         backgroundColor: const Color(0xFF8BACA5),
@@ -46,7 +46,7 @@ class TestsPage extends StatelessWidget {
                 ),
                 children: tests.map((testKey) {
                   return ListTile(
-                    title: Text(testKey.toUpperCase()),
+                    title: Text(testConfigurations[testKey]!.name),
                     onTap: () {
                       final config = testConfigurations[testKey]!;
                       Navigator.push(
