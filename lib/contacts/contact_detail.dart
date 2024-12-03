@@ -102,7 +102,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   }
 
   TimeOfDay _parseTime(String time) {
-    final format = DateFormat('h:mm a');
+    final format = DateFormat.jm('ru_RU');
     DateTime dateTime = format.parse(time);
     return TimeOfDay.fromDateTime(dateTime);
   }

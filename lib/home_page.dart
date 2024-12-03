@@ -103,8 +103,14 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w800, fontSize: 28),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    padding: const EdgeInsets.all(0.0),
+                    childAspectRatio: 1.0,
                     children: [
                       HomeButton(
                         icon: PhosphorIcons.smiley(),
@@ -169,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -520,9 +526,15 @@ class _HomePageState extends State<HomePage> {
                   Text('Привет, $name 👋', style: const TextStyle(
                       fontWeight: FontWeight.w800, fontSize: 28),),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  padding: const EdgeInsets.all(0.0),
+                  childAspectRatio: 1.0,
+                  children: [
                       HomeButton(
                         icon: PhosphorIcons.addressBookTabs(),
                         text: 'Приемы',
@@ -550,7 +562,7 @@ class _HomePageState extends State<HomePage> {
                       HomeButton(
                         icon: PhosphorIcons.articleNyTimes(),
                         text: 'Статьи',
-                        color: const Color(0xFF746A6A),
+                        color: const Color(0xFF78C0D6),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -565,7 +577,7 @@ class _HomePageState extends State<HomePage> {
                       HomeButton(
                         icon: PhosphorIcons.pill(),
                         text: 'Лекарства',
-                        color: const Color(0xFF8BACA5),
+                        color: const Color(0xFF746A6A),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -574,9 +586,21 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
+                    HomeButton(
+                      icon: PhosphorIcons.chartPie(),
+                      text: 'Статистика',
+                      color: const Color(0xFF8BACA5),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StatisticsPage()),
+                        );
+                      },
+                    ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -751,18 +775,25 @@ class HomeButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color color;
 
-  const HomeButton({super.key, required this.icon, required this.text, required this.color, required this.onTap});
+  const HomeButton({
+    super.key,
+    required this.icon,
+    required this.text,
+    required this.color,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 60,
-            height: 60,
-            padding: const EdgeInsets.all(8),
+            width: 52,
+            height: 52,
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: color,
@@ -770,7 +801,7 @@ class HomeButton extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
                   blurRadius: 6,
-                  offset: Offset(0, 4), // Shadow position
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -780,14 +811,19 @@ class HomeButton extends StatelessWidget {
               size: 32,
             ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+          const SizedBox(height: 2),
+          SizedBox(
+            height: 15.4,
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
